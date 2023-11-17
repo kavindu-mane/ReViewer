@@ -1,15 +1,20 @@
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
+import ThemeSitcher from "./functions/ThemeSwitcher";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
 
 const LinkArray = {
   "/": <Home />,
   "/login": <Login />,
+  "/register": <Register />,
 };
 
 function App() {
+  ThemeSitcher();
+
   return (
     <React.Fragment>
       <Router>
