@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { MdDarkMode, MdComputer, MdSunny } from "react-icons/md";
 import { Dropdown } from "flowbite-react";
+import ThemeSwitcher from "../functions/ThemeSwitcher";
 
 const ThemeButton = () => {
   // theme change function
-  const ThemeSwitcher = () => {
-    if (
-      localStorage.theme === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   const themeIcons = {
     dark: <MdDarkMode className="h-5 w-5" />,
@@ -35,7 +25,7 @@ const ThemeButton = () => {
   }, [currentTheme]);
 
   return (
-    <div className="mx-5 h-fit w-fit rounded-md p-1.5 dark:text-white text-sla">
+    <div className="text-sla mx-5 h-fit w-fit rounded-md p-1.5 dark:text-white">
       <Dropdown
         inline
         label={themeIcons[currentTheme]}
