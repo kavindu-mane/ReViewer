@@ -1,6 +1,5 @@
 import React from "react";
-import { CgMenuRight } from "react-icons/cg";
-import { Button, Navbar } from "flowbite-react";
+import { Navbar } from "flowbite-react";
 import ThemeButton from "./ThemeButton";
 
 const NavBarSecondary = () => {
@@ -12,7 +11,7 @@ const NavBarSecondary = () => {
     >
       {/* logo */}
       <Navbar.Brand href="/">
-        <span className="font-Poppins self-center whitespace-nowrap text-2xl font-medium text-sky-500 dark:text-sky-400">
+        <span className="self-center whitespace-nowrap font-Poppins text-2xl font-medium text-sky-500 dark:text-sky-400">
           ReViewer
         </span>
       </Navbar.Brand>
