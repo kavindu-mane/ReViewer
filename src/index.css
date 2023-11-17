@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply overflow-x-hidden bg-slate-100/80 text-black dark:bg-slate-900 dark:text-white;
+    @apply overflow-x-hidden bg-slate-200/60 text-black dark:bg-slate-900 dark:text-white;
   }
 
   :root {
