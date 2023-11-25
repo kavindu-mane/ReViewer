@@ -5,11 +5,13 @@ import ThemeSitcher from "./functions/ThemeSwitcher";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const Error = lazy(() => import("./pages/Error"));
 
 const LinkArray = {
   "/": <Home />,
   "/login": <Login />,
   "/register": <Register />,
+  "/*": <Error />,
 };
 
 function App() {

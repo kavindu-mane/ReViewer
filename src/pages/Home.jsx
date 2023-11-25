@@ -5,10 +5,12 @@ const Footer = lazy(() => import("../components/Footer"));
 const Home = () => {
   return (
     <React.Fragment>
-      {/* header */}
-      <NavBar />
-      {/* footer */}
-      <Footer />
+      <div className="relative flex min-h-screen flex-col items-center justify-between">
+        {/* header */}
+        <NavBar />
+        {/* footer */}
+        <Footer />
+      </div>
     </React.Fragment>
   );
 };

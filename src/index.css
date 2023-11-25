@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply overflow-x-hidden bg-slate-200/60 text-black dark:bg-slate-900 dark:text-white;
+    @apply overflow-x-hidden bg-white text-black dark:bg-slate-900 dark:text-white;
   }
 
   :root {
@@ -15,4 +15,14 @@
   .inputs select {
     @apply border-gray-400/80 dark:border dark:border-slate-500 dark:bg-slate-700/90;
   }
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
