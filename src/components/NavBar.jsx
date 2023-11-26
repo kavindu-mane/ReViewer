@@ -1,7 +1,7 @@
-import React from "react";
+import React, { lazy } from "react";
 import { CgMenuRight } from "react-icons/cg";
 import { Button, Navbar } from "flowbite-react";
-import ThemeButton from "./ThemeButton";
+const ThemeButton = lazy(() => import("./ThemeButton"));
 
 const NavBar = () => {
   const pagesWithPath = {

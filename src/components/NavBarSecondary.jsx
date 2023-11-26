@@ -7,7 +7,7 @@ const NavBarSecondary = () => {
     <Navbar
       fluid
       rounded
-      className="w-screen bg-transparent dark:bg-transparent"
+      className="z-10 w-screen bg-transparent dark:bg-transparent"
     >
       {/* logo */}
       <Navbar.Brand href="/">

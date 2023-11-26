@@ -2,7 +2,7 @@ import React from "react";
 
 const FooterSecondary = () => {
   return (
-    <div className="w-screen px-1 pb-3 text-center font-Poppins text-xs font-medium text-gray-600 dark:text-gray-300">
+    <div className="z-10 w-screen px-1 pb-3 text-center font-Poppins text-xs font-medium text-gray-600 dark:text-gray-300">
       Copyrights 2023 |
       <a href="/" className="mx-1">
         reviewer.com

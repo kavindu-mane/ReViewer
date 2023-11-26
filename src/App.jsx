@@ -6,12 +6,14 @@ const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Error = lazy(() => import("./pages/Error"));
+const AdminDshboard = lazy(() => import("./pages/AdminDshboard"));
 
 const LinkArray = {
   "/": <Home />,
   "/login": <Login />,
   "/register": <Register />,
   "/*": <Error />,
+  "/admin": <AdminDshboard />,
 };
 
 function App() {
