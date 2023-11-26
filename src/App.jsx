@@ -6,16 +6,16 @@ const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Error = lazy(() => import("./pages/Error"));
-const AdminDshboard = lazy(() => import("./pages/AdminDshboard"));
-const Books = lazy(() => import("./components/user/Books.User"));
-const Review = lazy(() => import("./components/user/Review.User"));
-const Profile = lazy(() => import("./components/user/Profile.User"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Books = lazy(() => import("./pages/user/Books.User"));
+const Review = lazy(() => import("./pages/user/Review.User"));
+const Profile = lazy(() => import("./pages/user/Profile.User"));
 
 const LinkArray = {
   "/": <Home />,
   "/login": <Login />,
   "/register": <Register />,
-  "/admin": <AdminDshboard />,
+  "/admin": <AdminDashboard />,
   "/books": <Books />,
   "/profile": <Profile />,
   "/*": <Error />,
