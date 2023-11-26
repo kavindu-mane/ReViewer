@@ -7,13 +7,18 @@ const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Error = lazy(() => import("./pages/Error"));
 const AdminDshboard = lazy(() => import("./pages/AdminDshboard"));
+const Books = lazy(() => import("./components/user/Books.User"));
+const Review = lazy(() => import("./components/user/Review.User"));
+const Profile = lazy(() => import("./components/user/Profile.User"));
 
 const LinkArray = {
   "/": <Home />,
   "/login": <Login />,
   "/register": <Register />,
-  "/*": <Error />,
   "/admin": <AdminDshboard />,
+  "/books": <Books />,
+  "/profile": <Profile />,
+  "/*": <Error />,
 };
 
 function App() {

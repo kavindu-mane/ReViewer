@@ -19,6 +19,15 @@ const NavBar = () => {
         </span>
       </Navbar.Brand>
       <div className="flex items-center md:order-2">
+        <Navbar.Collapse className="md:me-5">
+          {Object.keys(pagesWithPath).map((path, key) => {
+            return (
+              <Navbar.Link key={key} className="!text-gray-300" href={path}>
+                {pagesWithPath[path]}
+              </Navbar.Link>
+            );
+          })}
+        </Navbar.Collapse>
         <a href="/login">
           <Button
             size={"xs"}
@@ -32,15 +41,6 @@ const NavBar = () => {
         </div>
         <Navbar.Toggle barIcon={CgMenuRight} className="!ring-0" />
       </div>
-      <Navbar.Collapse>
-        {Object.keys(pagesWithPath).map((path, key) => {
-          return (
-            <Navbar.Link key={key} className="!text-gray-300" href={path}>
-              {pagesWithPath[path]}
-            </Navbar.Link>
-          );
-        })}
-      </Navbar.Collapse>
     </Navbar>
   );
 };
