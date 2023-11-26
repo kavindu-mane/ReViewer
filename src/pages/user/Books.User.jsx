@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
-const NavBar = lazy(() => import("../NavBar"));
-const Footer = lazy(() => import("../Footer"));
+const NavBar = lazy(() => import("../../components/NavBar"));
+const Footer = lazy(() => import("../../components/Footer"));
 
 const Books = () => {
   return (
