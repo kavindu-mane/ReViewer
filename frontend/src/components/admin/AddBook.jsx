@@ -1,14 +1,14 @@
 import React from "react";
-import { Label, TextInput } from "flowbite-react";
+import { Label, TextInput, Select } from "flowbite-react";
 
 const AddBook = () => {
   return (
-    <div className="w-full max-w-4xl">
+    <div className="max-w-4xl">
       <div className="mb-9 font-Poppins text-2xl font-medium">Add new Book</div>
       <form className="flex flex-col gap-4">
         <div className="w-full space-y-4">
           {/* ISBN Registration number */}
-          <div className="flex w-full flex-col items-center gap-4 md:flex-row">
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
             <Label
               htmlFor="regno"
               value="Book Reg.No"
@@ -23,8 +23,24 @@ const AddBook = () => {
               className="inputs"
             />
           </div>
+          {/* Title of the book */}
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+            <Label
+              htmlFor="title"
+              value="Book Title"
+              className="after:ml-0.5 after:text-red-500 after:content-['*']"
+            />
+            <TextInput
+              id="booktitle"
+              placeholder="title"
+              required
+              type="text"
+              name="booktitle"
+              className="inputs"
+            />
+          </div>
           {/* Author's Name */}
-          <div className="flex w-full flex-col items-center gap-4 md:flex-row">
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
             <Label
               htmlFor="authorname"
               value="Author name"
@@ -40,10 +56,10 @@ const AddBook = () => {
             />
           </div>
           {/* Book Category */}
-          <div className="w-full">
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
             <Label
-              htmlFor="vehicle-type"
-              value="Vehicle Type"
+              htmlFor="book-category"
+              value="Book Category"
               className="after:ml-0.5 after:text-red-500 after:content-['*']"
             />
 
@@ -54,15 +70,33 @@ const AddBook = () => {
               defaultValue={"car"}
               className="inputs"
             >
-              <option value="car">Car</option>
-              <option value="bike">Bike</option>
-              <option value="tuk-tuk">Tuk-Tuk</option>
-              <option value="van">Van</option>
+              <option value="Adventure">Adventure Fiction</option>
+              <option value="Arts-&-New-Media">Arts & New Media</option>
+              <option value="Business-Literature">Business Literature</option>
+              <option value="Crime">Crime</option>
+              <option value="Detective">Detective</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Health-fitness">Health,Fitness & Dieting</option>
+              <option value="History">History</option>
+              <option value="Horror">Horror</option>
+              <option value="Love-story">Love Story</option>
+              <option value="Mystery-Thriller">
+                Mystery,Thriller & Suspense
+              </option>
+              <option value="Poetry">Poetry</option>
+              <option value="Psychology">Psychology</option>
+              <option value="Religion">Religion</option>
+              <option value="Romance">Romance</option>
+              <option value="Scinece Fiction">Scinece Fiction</option>
+              <option value="Spirituality">Spirituality</option>
+              <option value="Sports">Sports</option>
+              <option value="Travel">Travel</option>
+              <option value="Young-Adult">Young Adult</option>
             </Select>
           </div>
 
           {/* Published Year */}
-          <div className="flex w-full flex-col items-center gap-4 md:flex-row">
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
             <Label
               htmlFor="pubyear"
               value="Year of Publishing"
@@ -74,6 +108,38 @@ const AddBook = () => {
               required
               type="date"
               name="pubyear"
+              className="inputs"
+            />
+          </div>
+          {/* Language of the book */}
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+            <Label
+              htmlFor="language"
+              value="Language"
+              className="after:ml-0.5 after:text-red-500 after:content-['*']"
+            />
+            <TextInput
+              id="language"
+              placeholder=""
+              required
+              type="text"
+              name="language"
+              className="inputs"
+            />
+          </div>
+          {/* Price of the book */}
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+            <Label
+              htmlFor="price"
+              value="Price"
+              className="after:ml-0.5 after:text-red-500 after:content-['*']"
+            />
+            <TextInput
+              id="price"
+              placeholder=""
+              required
+              type="text"
+              name="price"
               className="inputs"
             />
           </div>
