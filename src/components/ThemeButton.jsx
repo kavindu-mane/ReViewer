@@ -4,7 +4,6 @@ import { Dropdown } from "flowbite-react";
 import ThemeSwitcher from "../functions/ThemeSwitcher";
 
 const ThemeButton = () => {
-  // theme change function
 
   const themeIcons = {
     dark: <MdDarkMode className="h-5 w-5" />,
