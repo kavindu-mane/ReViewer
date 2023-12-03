@@ -4,12 +4,33 @@ import { IoMdSearch } from "react-icons/io";
 import { IoLogOutOutline } from "react-icons/io5";
 import { Button, Navbar, TextInput, Dropdown, Avatar } from "flowbite-react";
 import { useAuth } from "../hooks/AuthContext";
+import useAxiosPrivate from "../hooks/useAxios";
+import { useNavigate } from "react-router-dom";
 const ThemeButton = lazy(() => import("./ThemeButton"));
 const Search = lazy(() => import("../components/user/Search.Modal"));
 
 const NavBar = () => {
   const [openModal, setOpenModal] = useState(false);
-  const { user } = useAuth();
+  const axiosPrivateInstance = useAxiosPrivate();
+  const { user, setUserValue } = useAuth();
+  const navigate = useNavigate();
+
+  // logout clicked
+  const logout = async () => {
+    await axiosPrivateInstance
+      .post("logout")
+      .then((response) => {
+        if (response.status === 200) {
+          setUserValue(null)
+          localStorage.removeItem("token");
+          localStorage.removeItem("csrf");
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.log("Error : " + error);
+      });
+  };
 
   // nav link object
   const pagesWithPath = {
@@ -79,7 +100,7 @@ const NavBar = () => {
           >
             <Dropdown.Header>
               <span className="block text-sm">{user?.name}</span>
-              <span className="block truncate text-sm font-medium w-40">
+              <span className="block w-40 truncate text-sm font-medium">
                 {user?.email}
               </span>
             </Dropdown.Header>
@@ -87,7 +108,7 @@ const NavBar = () => {
               <CgProfile className="me-2 h-5 w-5" /> Profile
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item>
+            <Dropdown.Item onClick={logout}>
               <IoLogOutOutline className="me-2 h-5 w-5" />
               Sign out
             </Dropdown.Item>
