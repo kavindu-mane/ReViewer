@@ -1,12 +1,16 @@
 import React, { lazy, useState } from "react";
-import { CgMenuRight } from "react-icons/cg";
+import { CgMenuRight, CgProfile } from "react-icons/cg";
 import { IoMdSearch } from "react-icons/io";
-import { Button, Navbar, TextInput } from "flowbite-react";
+import { IoLogOutOutline } from "react-icons/io5";
+import { Button, Navbar, TextInput, Dropdown, Avatar } from "flowbite-react";
+import { useAuth } from "../hooks/AuthContext";
 const ThemeButton = lazy(() => import("./ThemeButton"));
 const Search = lazy(() => import("../components/user/Search.Modal"));
 
 const NavBar = () => {
   const [openModal, setOpenModal] = useState(false);
+  const { user } = useAuth();
+
   // nav link object
   const pagesWithPath = {
     "/about": "About",
@@ -47,6 +51,7 @@ const NavBar = () => {
         <div className="hidden items-center md:me-8 md:flex">
           {nevElements()}
         </div>
+
         {/* search */}
         <TextInput
           type="text"
@@ -56,14 +61,47 @@ const NavBar = () => {
           onClick={() => setOpenModal(true)}
           required
         />
-        {/* login button */}
-        <Button
-          size={"xs"}
-          href="/login"
-          className="rounded-[5px] bg-sky-600 px-3 text-lg"
-        >
-          Login
-        </Button>
+
+        {/* if user already logged in he/she can see profile and if not he/she can see log in button */}
+        {user ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar
+                alt={user?.name[0]}
+                img="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                rounded
+                size={"sm"}
+                className="m-auto text-xl font-bold"
+              />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-sm">{user?.name}</span>
+              <span className="block truncate text-sm font-medium w-40">
+                {user?.email}
+              </span>
+            </Dropdown.Header>
+            <Dropdown.Item>
+              <CgProfile className="me-2 h-5 w-5" /> Profile
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item>
+              <IoLogOutOutline className="me-2 h-5 w-5" />
+              Sign out
+            </Dropdown.Item>
+          </Dropdown>
+        ) : (
+          <Button
+            size={"xs"}
+            href="/login"
+            className="rounded-[5px] bg-sky-600 px-3 text-lg"
+          >
+            Login
+          </Button>
+        )}
+
         {/* search icon for small screens */}
         <IoMdSearch
           className="ms-5 block h-5 w-5 cursor-pointer text-white lg:hidden"

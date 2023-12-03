@@ -1,10 +1,27 @@
-import React, { lazy } from "react";
+import React, { lazy, useContext } from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import background from "../assets/wave-line.svg";
+import { useAuth } from "../hooks/AuthContext";
+import axios from "axios";
 const NavBarSecondary = lazy(() => import("../components/NavBarSecondary"));
 const FooterSecondary = lazy(() => import("../components/FooterSecondary"));
 
 const Login = () => {
+  const { setAccessToken} = useAuth();
+  // login user
+  const loginUser = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    await axios
+      .post("/login", formData)
+      .then((response) => {
+        setAccessToken(response?.data?.access);
+      })
+      .catch((error) => {
+        console.log("Error : " + error);
+      });
+  };
+
   return (
     <React.Fragment>
       <div className="relative flex min-h-screen flex-col items-center justify-between">
@@ -25,7 +42,10 @@ const Login = () => {
               </span>
             </h1>
             {/* form */}
-            <form className="space-y-4 md:space-y-6">
+            <form
+              className="space-y-4 md:space-y-6"
+              onSubmit={(e) => loginUser(e)}
+            >
               {/* email */}
               <div>
                 <div className="mb-2 block">
