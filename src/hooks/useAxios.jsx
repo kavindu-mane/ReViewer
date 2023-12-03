@@ -1,28 +1,8 @@
 import { useEffect } from "react";
-import { useAuth } from "./AuthContext";
 import axios from "axios";
+import RefreshToken from "./RefreshToken";
 
 export default function useAxiosPrivate() {
-  const { accessToken, setAccessToken, user } = useAuth();
-
-  // token refresh function
-  const refresh = async () => {
-    let access = {};
-    await axios
-      .post("login/refresh")
-      .then((response) => {
-        if (response.status === 200) {
-          setAccessToken(response?.data?.access);
-
-          access = {
-            accessTokens: response?.data?.access,
-          };
-        }
-      })
-      .catch((error) => {});
-
-    return access;
-  };
 
   // axios private instance
   const axiosPrivateInstance = axios.create({
@@ -37,9 +17,9 @@ export default function useAxiosPrivate() {
     const requestIntercept = axiosPrivateInstance.interceptors.request.use(
       (config) => {
         if (!config?.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${accessToken}`;
+          config.headers["Authorization"] = `Bearer ${localStorage.token}`;
+          config.headers["X-CSRFToken"] = localStorage.csrf;
         }
-
         return config;
       },
       (error) => Promise.reject(error),
@@ -55,9 +35,10 @@ export default function useAxiosPrivate() {
           !prevRequest?.sent
         ) {
           prevRequest.sent = true;
-          const { accessTokens: newAccessToken } = await refresh();
-          setAccessToken(newAccessToken);
+          const { accessTokens: newAccessToken, csrfTokens: newCsrfTokens } =
+            await RefreshToken();
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          config.headers["X-CSRFToken"] = newCsrfTokens;
           return axiosPrivateInstance(prevRequest);
         }
         return Promise.reject(error);
@@ -68,7 +49,7 @@ export default function useAxiosPrivate() {
       axiosPrivateInstance.interceptors.request.eject(requestIntercept);
       axiosPrivateInstance.interceptors.response.eject(responseIntercept);
     };
-  }, [accessToken, user]);
+  }, [localStorage.token]);
 
   return axiosPrivateInstance;
 }

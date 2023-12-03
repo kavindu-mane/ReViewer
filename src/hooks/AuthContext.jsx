@@ -1,21 +1,17 @@
 import { createContext, useContext, useState } from "react";
 
-const AuthContext = createContext({
-  user: {},
-  setUser: () => {},
-  accessToken: null,
-  setAccessToken: () => {},
-});
+const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
+
+  const setUserValue = (newValue) => {
+    setUser(newValue);
+  };
 
   let contextData = {
-    user: user,
-    setUser: setUser,
-    accessToken: accessToken,
-    setAccessToken: setAccessToken,
+    user,
+    setUserValue,
   };
 
   return (
@@ -23,7 +19,6 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// export const useMarkdown = () => useContext(MarkdownContext);
 export const useAuth = () => useContext(AuthContext);
 
 export default AuthProvider;

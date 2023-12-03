@@ -1,21 +1,31 @@
-import React, { lazy, useContext } from "react";
+import React, { lazy } from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import background from "../assets/wave-line.svg";
-import { useAuth } from "../hooks/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/AuthContext";
+import useAxiosPrivate from "../hooks/useAxios";
 const NavBarSecondary = lazy(() => import("../components/NavBarSecondary"));
 const FooterSecondary = lazy(() => import("../components/FooterSecondary"));
 
 const Login = () => {
-  const { setAccessToken} = useAuth();
+  const navigate = useNavigate();
+  const { setUserValue } = useAuth();
+  const axiosPrivateInstance = useAxiosPrivate();
+
   // login user
   const loginUser = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     await axios
       .post("/login", formData)
-      .then((response) => {
-        setAccessToken(response?.data?.access);
+      .then(async (response) => {
+        localStorage.token = response?.data?.access;
+        localStorage.csrf = response?.data?.csrf;
+        // get user
+        const { data } = await axiosPrivateInstance.get("/user");
+        setUserValue(data);
+        navigate("/");
       })
       .catch((error) => {
         console.log("Error : " + error);

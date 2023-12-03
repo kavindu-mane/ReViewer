@@ -29,24 +29,24 @@ function App() {
 
   return (
     <React.Fragment>
-      <Authentications>
-        <Router>
-          <Suspense
-            fallback={
-              <p className="flex h-screen items-center justify-center text-lg italic">
-                <CgSpinnerTwoAlt className="h-20 w-20 animate-spin text-emerald-400" />
-              </p>
-            }
-          >
-            <Routes>
+      <Router>
+        <Suspense
+          fallback={
+            <p className="flex h-screen items-center justify-center text-lg italic">
+              <CgSpinnerTwoAlt className="h-20 w-20 animate-spin text-emerald-400" />
+            </p>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Authentications />}>
               <Route index exact element={<Home />} />
               {Object.keys(LinkArray).map((key) => {
                 return <Route key={key} path={key} element={LinkArray[key]} />;
               })}
-            </Routes>
-          </Suspense>
-        </Router>
-      </Authentications>
+            </Route>
+          </Routes>
+        </Suspense>
+      </Router>
     </React.Fragment>
   );
 }

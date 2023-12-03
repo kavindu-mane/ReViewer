@@ -1,30 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxios";
 import { useAuth } from "../hooks/AuthContext";
-import useRefreshToken from "../hooks/useRefreshToken";
-import axios from "axios";
+import { Outlet } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
+import RefreshToken from "../hooks/RefreshToken";
 
-const Authentications = ({ children }) => {
-  const { setUser, accessToken, setAccessToken } = useAuth();
+const Authentications = () => {
+  const { setUserValue } = useAuth();
   const axiosPrivateInstance = useAxiosPrivate();
-  const refresh = useRefreshToken();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        await refresh().then(async () => {
-          const { data } = await axiosPrivateInstance.get("/user");
-          setUser(data);
-        });
-      } catch (error) {
-        console.log("Something went wrong");
-      }
-    };
+    let isMounted = true;
 
-    !accessToken ? getUser() : setLoading(false);
+    async function verifyUser() {
+      try {
+        await RefreshToken();
+        if ("token" in localStorage) {
+          const { data } = await axiosPrivateInstance.get("/user");
+          setUserValue(data);
+        }
+      } catch (error) {
+        localStorage.removeItem("token");
+      } finally {
+        isMounted && setLoading(false);
+      }
+    }
+
+    "token" in localStorage ? verifyUser() : setLoading(false);
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  return <React.Fragment>{children}</React.Fragment>;
+  return loading ? <LoadingSpinner /> : <Outlet />;
 };
 
 export default Authentications;
