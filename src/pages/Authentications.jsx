@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxios";
 import { useAuth } from "../hooks/AuthContext";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import RefreshToken from "../hooks/RefreshToken";
 
@@ -9,6 +9,7 @@ const Authentications = () => {
   const { setUserValue } = useAuth();
   const axiosPrivateInstance = useAxiosPrivate();
   const [loading, setLoading] = useState(true);
+  const localtion = useLocation();
 
   useEffect(() => {
     let isMounted = true;
@@ -32,7 +33,7 @@ const Authentications = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [localtion.pathname]);
 
   return loading ? <LoadingSpinner /> : <Outlet />;
 };
