@@ -6,6 +6,8 @@ import { Button, Navbar, TextInput, Dropdown, Avatar } from "flowbite-react";
 import { useAuth } from "../hooks/AuthContext";
 import useAxiosPrivate from "../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import tostDefault from "../data/tostDefault";
 const ThemeButton = lazy(() => import("./ThemeButton"));
 const Search = lazy(() => import("../components/user/Search.Modal"));
 
@@ -17,18 +19,40 @@ const NavBar = () => {
 
   // logout clicked
   const logout = async () => {
+    const id = toast.loading("Please wait...", tostDefault);
     await axiosPrivateInstance
       .post("logout")
       .then((response) => {
         if (response.status === 200) {
-          setUserValue(null)
+          setUserValue(null);
           localStorage.removeItem("token");
           localStorage.removeItem("csrf");
+          toast.update(id, {
+            ...tostDefault,
+            render: "Logout successful",
+            type: "success",
+            isLoading: false,
+            closeButton: true,
+          });
           navigate("/");
+        } else {
+          toast.update(id, {
+            ...tostDefault,
+            render: "Something went wrong",
+            type: "error",
+            isLoading: false,
+            closeButton: true,
+          });
         }
       })
       .catch((error) => {
-        console.log("Error : " + error);
+        toast.update(id, {
+          ...tostDefault,
+          render: "Something went wrong",
+          type: "error",
+          isLoading: false,
+          closeButton: true,
+        });
       });
   };
 
