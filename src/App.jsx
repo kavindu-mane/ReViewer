@@ -4,6 +4,8 @@ import { CgSpinnerTwoAlt } from "react-icons/cg";
 import ThemeSitcher from "./functions/ThemeSwitcher";
 import axios from "axios";
 import Authentications from "./pages/Authentications";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -37,6 +39,7 @@ function App() {
             </p>
           }
         >
+          <ToastContainer/>
           <Routes>
             <Route path="/" element={<Authentications />}>
               <Route index exact element={<Home />} />
