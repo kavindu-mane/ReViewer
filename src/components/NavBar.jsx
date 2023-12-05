@@ -8,6 +8,7 @@ import useAxiosPrivate from "../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import tostDefault from "../data/tostDefault";
+import Logout from "../hooks/Logout";
 const ThemeButton = lazy(() => import("./ThemeButton"));
 const Search = lazy(() => import("../components/user/Search.Modal"));
 
@@ -96,7 +97,6 @@ const NavBar = () => {
         <div className="hidden items-center md:me-8 md:flex">
           {nevElements()}
         </div>
-
         {/* search */}
         <TextInput
           type="text"
@@ -132,9 +132,11 @@ const NavBar = () => {
               <CgProfile className="me-2 h-5 w-5" /> Profile
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item onClick={logout}>
-              <IoLogOutOutline className="me-2 h-5 w-5" />
-              Sign out
+            <Dropdown.Item>
+              <Logout>
+                <IoLogOutOutline className="me-2 h-5 w-5" />
+                Logout
+              </Logout>
             </Dropdown.Item>
           </Dropdown>
         ) : (

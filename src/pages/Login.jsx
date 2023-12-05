@@ -4,57 +4,18 @@ import background from "../assets/wave-line.svg";
 import axios from "axios";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { useAuth } from "../hooks/AuthContext";
-import useAxiosPrivate from "../hooks/useAxios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import tostDefault from "../data/tostDefault";
+import Logout from "../hooks/Logout";
 const NavBarSecondary = lazy(() => import("../components/NavBarSecondary"));
 const FooterSecondary = lazy(() => import("../components/FooterSecondary"));
 
 const Login = () => {
-  const { user, setUserValue } = useAuth();
+  const { user } = useAuth();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const axiosPrivateInstance = useAxiosPrivate();
   const navigate = useNavigate();
-
-  // logout user
-  const logout = async () => {
-    const id = toast.loading("Please wait...", tostDefault);
-    await axiosPrivateInstance
-      .post("logout")
-      .then((response) => {
-        if (response.status === 200) {
-          setUserValue(null);
-          localStorage.removeItem("token");
-          localStorage.removeItem("csrf");
-          toast.update(id, {
-            ...tostDefault,
-            render: "Logout successful",
-            type: "success",
-            isLoading: false,
-            closeButton: true,
-          });
-        } else {
-          toast.update(id, {
-            ...tostDefault,
-            render: "Something went wrong",
-            type: "error",
-            isLoading: false,
-            closeButton: true,
-          });
-        }
-      })
-      .catch((error) => {
-        toast.update(id, {
-          ...tostDefault,
-          render: "Something went wrong",
-          type: "error",
-          isLoading: false,
-          closeButton: true,
-        });
-      });
-  };
 
   // login user
   const loginUser = async (e) => {
@@ -77,8 +38,7 @@ const Login = () => {
           });
           localStorage.token = response?.data?.access;
           localStorage.csrf = response?.data?.csrf;
-          // window.location.pathname = "/";
-          navigate("/");
+          navigate("/", { replace: true });
         } else {
           toast.dismiss(id);
           setError(response.data?.details);
@@ -201,9 +161,11 @@ const Login = () => {
               </p>
               {/* buttons */}
               <div className="flex w-full space-x-2">
-                <Button type="submit" className="mt-5 w-full" onClick={logout}>
-                  Logout
-                </Button>
+                <Logout>
+                  <Button type="submit" className="mt-5 w-full">
+                    Logout
+                  </Button>
+                </Logout>
                 <Button
                   type="submit"
                   className="mt-5 w-full border-2 border-sky-700 bg-transparent text-slate-900 duration-200 hover:!border-transparent hover:bg-sky-700 hover:text-white dark:border-sky-400 dark:bg-transparent dark:text-white dark:hover:bg-sky-600"
