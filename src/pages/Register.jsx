@@ -8,17 +8,62 @@ import {
   Avatar,
 } from "flowbite-react";
 import background from "../assets/wave-line.svg";
+import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { useAuth } from "../hooks/AuthContext";
 import tostDefault from "../data/tostDefault";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Logout from "../hooks/Logout";
+import axios from "axios";
 const NavBarSecondary = lazy(() => import("../components/NavBarSecondary"));
 const FooterSecondary = lazy(() => import("../components/FooterSecondary"));
 
 const Register = () => {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({});
+  const navigate = useNavigate();
 
+  // register user
+  const registerUser = async (e) => {
+    e.preventDefault();
+    setError({});
+    setLoading(true);
+    const formData = new FormData(e.target);
+    const id = toast.loading("Please wait...", tostDefault);
+    await axios
+      .post("/register", formData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status === 200) {
+          if (response.data?.details === "success") {
+            toast.update(id, {
+              ...tostDefault,
+              render: "Registration successful",
+              type: "success",
+              isLoading: false,
+              closeButton: true,
+            });
+            navigate("/login", { replace: true });
+          } else {
+            toast.dismiss(id);
+            setError(response.data);
+          }
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+        toast.update(id, {
+          ...tostDefault,
+          render: "Something went wrong",
+          type: "error",
+          isLoading: false,
+          closeButton: true,
+        });
+      });
+  };
 
   return (
     <React.Fragment>
@@ -39,7 +84,7 @@ const Register = () => {
                 Create account
               </h1>
               {/* form */}
-              <form className="">
+              <form className="" onSubmit={(e) => registerUser(e)}>
                 <div className="flex flex-col lg:flex-row lg:space-x-4">
                   {/* left side */}
                   <div className="w-full space-y-4">
@@ -50,12 +95,14 @@ const Register = () => {
                       </div>
                       <TextInput
                         id="name"
-                        type="email"
+                        type="text"
                         name="name"
                         placeholder="John Perera"
                         required
                         className="inputs"
-                        helperText={<span className="text-red-500"></span>}
+                        helperText={
+                          <span className="text-red-500">{error?.name}</span>
+                        }
                       />
                     </div>
                     {/* email */}
@@ -70,17 +117,19 @@ const Register = () => {
                         placeholder="name@abc.com"
                         required
                         className="inputs"
-                        helperText={<span className="text-red-500"></span>}
+                        helperText={
+                          <span className="text-red-500">{error?.email}</span>
+                        }
                       />
                     </div>
                     {/* birthday */}
                     <div>
                       <div className="mb-2 block">
-                        <Label htmlFor="birthday" value="Birthday" />
+                        <Label htmlFor="birth_date" value="Birthday" />
                       </div>
                       <Datepicker
-                        id="birthday"
-                        name="birthday"
+                        id="birth_date"
+                        name="birth_date"
                         className="inputs"
                         showClearButton={false}
                         showTodayButton={false}
@@ -90,6 +139,11 @@ const Register = () => {
                             new Date().getMonth(),
                             new Date().getDate(),
                           )
+                        }
+                        helperText={
+                          <span className="text-red-500">
+                            {error?.birth_date}
+                          </span>
                         }
                       />
                     </div>
@@ -108,25 +162,33 @@ const Register = () => {
                         placeholder="••••••••"
                         required
                         className="inputs"
-                        helperText={<span className="text-red-500"></span>}
+                        helperText={
+                          <span className="text-red-500">
+                            {error?.password}
+                          </span>
+                        }
                       />
                     </div>
                     {/* conf password */}
                     <div>
                       <div className="mb-2 block">
                         <Label
-                          htmlFor="conf-password"
+                          htmlFor="confpassword"
                           value="Confirm Password"
                         />
                       </div>
                       <TextInput
-                        id="conf-password"
-                        name="conf-password"
+                        id="confpassword"
+                        name="confpassword"
                         type="password"
                         placeholder="••••••••"
                         required
                         className="inputs"
-                        helperText={<span className="text-red-500"></span>}
+                        helperText={
+                          <span className="text-red-500">
+                            {error?.confpassword}
+                          </span>
+                        }
                       />
                     </div>
                     {/* terms */}
@@ -157,8 +219,11 @@ const Register = () => {
                     <Button
                       type="submit"
                       className="w-full disabled:cursor-not-allowed disabled:bg-gray-500 disabled:dark:bg-gray-500"
-                      disabled={!acceptTerms}
+                      disabled={!acceptTerms || loading}
                     >
+                      {loading && (
+                        <CgSpinnerTwoAlt className="me-3 h-5 w-5 animate-spin text-white" />
+                      )}
                       Create an account
                     </Button>
                     {/* redirected to login */}
