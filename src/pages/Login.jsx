@@ -117,7 +117,12 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-start">
                     <div className="flex items-center gap-2">
-                      <Checkbox id="remember" className="inputs !ring-0" />
+                      <Checkbox
+                        id="remember"
+                        name="remember"
+                        defaultChecked={false}
+                        className="inputs !ring-0"
+                      />
                       <Label htmlFor="remember">Remember me</Label>
                     </div>
                   </div>
