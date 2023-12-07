@@ -38,7 +38,8 @@ const Login = () => {
           });
           localStorage.token = response?.data?.access;
           localStorage.csrf = response?.data?.csrf;
-          navigate("/", { replace: true });
+          if (response?.data?.status) navigate("/admin", { replace: true });
+          else navigate("/", { replace: true });
         } else {
           toast.dismiss(id);
           setError(response.data?.details);

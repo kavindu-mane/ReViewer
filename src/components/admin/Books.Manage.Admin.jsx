@@ -1,5 +1,5 @@
 import React from "react";
-import AddBook from "./AddBook";
+import AddBook from "./manage/books/AddBook";
 
 const Books = () => {
   return (<AddBook/>);

@@ -1,32 +1,61 @@
 import React from "react";
 import { Sidebar } from "flowbite-react";
 import { HiChartPie, HiUser } from "react-icons/hi";
-import { MdBook, MdManageAccounts } from "react-icons/md";
+import { MdBook } from "react-icons/md";
+import { IoLogOutOutline } from "react-icons/io5";
+import Logout from "../../hooks/Logout";
+import { useNavigate } from "react-router-dom";
 
-const SideBar = ({ isSideBarOpend }) => {
+const sidebarItems = [
+  {
+    icon: HiChartPie,
+    text: "Dashboard",
+    path: "/admin",
+  },
+  {
+    icon: MdBook,
+    text: "Manage Books",
+    path: "/admin/books",
+  },
+  {
+    icon: HiUser,
+    text: "Manage Users",
+    path: "admin/users",
+  },
+];
+
+const SideBar = ({ openElement = 0 }) => {
+  const navigate = useNavigate();
   return (
-    <Sidebar
-      className={
-        "relative z-10 block w-64 border-r border-gray-300 duration-300 dark:border-gray-700 lg:shadow-2xl lg:drop-shadow-2xl " +
-        (!isSideBarOpend
-          ? "-translate-x-full lg:translate-x-0"
-          : "shadow-2xl drop-shadow-2xl")
-      }
-    >
+    <Sidebar className="h-full w-72">
       {/* sidebar items */}
-      <Sidebar.Items className="pt-14">
+      <Sidebar.Items className="flex h-full flex-col justify-between">
         <Sidebar.ItemGroup>
-          <Sidebar.Item
-            className="child-svg-white !bg-blue-600 !text-white"
-            icon={HiChartPie}
-          >
-            Dashboard
-          </Sidebar.Item>
-          <Sidebar.Collapse icon={MdManageAccounts} label="Manage">
-            <Sidebar.Item icon={MdBook}>Books</Sidebar.Item>
-            <Sidebar.Item icon={HiUser}>Users</Sidebar.Item>
-          </Sidebar.Collapse>
+          {sidebarItems.map((item, key) => {
+            return (
+              <Sidebar.Item
+                key={key}
+                onClick={() => navigate(item?.path)}
+                className={
+                  "cursor-pointer " +
+                  (openElement === key
+                    ? "child-svg-white !bg-blue-600 !text-white"
+                    : "")
+                }
+                icon={item?.icon}
+              >
+                {item?.text}
+              </Sidebar.Item>
+            );
+          })}
         </Sidebar.ItemGroup>
+        {/* logout button */}
+        <Logout>
+          <button className="mt-2 flex w-full items-center rounded-md bg-transparent px-3 py-2 hover:bg-gray-600/50">
+            <IoLogOutOutline className="me-3 h-5 w-5" />
+            <span>Logout</span>
+          </button>
+        </Logout>
       </Sidebar.Items>
     </Sidebar>
   );
