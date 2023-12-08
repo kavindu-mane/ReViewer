@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 import RefreshToken from "./RefreshToken";
+import { jwtDecode } from "jwt-decode";
 
-export default function useAxiosPrivate() {
-
+const useAxios = () => {
   // axios private instance
   const axiosPrivateInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
@@ -13,43 +13,30 @@ export default function useAxiosPrivate() {
     },
   });
 
-  useEffect(() => {
-    const requestIntercept = axiosPrivateInstance.interceptors.request.use(
-      (config) => {
+  axiosPrivateInstance.interceptors.request.use(
+    async (config) => {
+      const user = jwtDecode(localStorage.token);
+      const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+
+      if (!isExpired) {
         if (!config?.headers["Authorization"]) {
           config.headers["Authorization"] = `Bearer ${localStorage.token}`;
           config.headers["X-CSRFToken"] = localStorage.csrf;
         }
         return config;
-      },
-      (error) => Promise.reject(error),
-    );
-
-    const responseIntercept = axiosPrivateInstance.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const prevRequest = error?.config;
-        if (
-          (error?.response?.status === 403 ||
-            error?.response?.status === 401) &&
-          !prevRequest?.sent
-        ) {
-          prevRequest.sent = true;
-          const { accessTokens: newAccessToken, csrfTokens: newCsrfTokens } =
-            await RefreshToken();
-          prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          config.headers["X-CSRFToken"] = newCsrfTokens;
-          return axiosPrivateInstance(prevRequest);
-        }
-        return Promise.reject(error);
-      },
-    );
-
-    return () => {
-      axiosPrivateInstance.interceptors.request.eject(requestIntercept);
-      axiosPrivateInstance.interceptors.response.eject(responseIntercept);
-    };
-  }, [localStorage.token]);
+      }
+      const { accessTokens: newAccessToken, csrfTokens: newCsrfTokens } =
+        await RefreshToken();
+      localStorage.setItem("token", newAccessToken);
+      localStorage.setItem("csrf", newCsrfTokens);
+      config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+      config.headers["X-CSRFToken"] = newCsrfTokens;
+      return config;
+    },
+    (error) => Promise.reject(error),
+  );
 
   return axiosPrivateInstance;
-}
+};
+
+export default useAxios;
