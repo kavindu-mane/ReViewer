@@ -36,8 +36,8 @@ const Login = () => {
             isLoading: false,
             closeButton: true,
           });
-          localStorage.token = response?.data?.access;
-          localStorage.csrf = response?.data?.csrf;
+          localStorage.setItem("token", response?.data?.access);
+          localStorage.setItem("csrf", response?.data?.csrf);
           if (response?.data?.status) navigate("/admin", { replace: true });
           else navigate("/", { replace: true });
         } else {

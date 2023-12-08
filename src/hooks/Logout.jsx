@@ -1,10 +1,10 @@
 import { useAuth } from "./AuthContext";
-import useAxiosPrivate from "./useAxios";
+import useAxios from "./useAxios";
 import { toast } from "react-toastify";
 import tostDefault from "../data/tostDefault";
 
 const Logout = ({ children }) => {
-  const axiosPrivateInstance = useAxiosPrivate();
+  const axiosPrivateInstance = useAxios();
   const { setUserValue } = useAuth();
 
   const logout = async () => {

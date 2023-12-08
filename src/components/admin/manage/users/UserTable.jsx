@@ -8,7 +8,7 @@ import {
 } from "flowbite-react";
 import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
-import useAxiosPrivate from "../../../../hooks/useAxios";
+import useAxios from "../../../../hooks/useAxios";
 import tostDefault from "../../../../data/tostDefault";
 
 const UserTable = () => {
@@ -16,7 +16,7 @@ const UserTable = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [users, setUsers] = useState();
-  const axiosPrivateInstance = useAxiosPrivate();
+  const axiosPrivateInstance = useAxios();
   // page changing function
   const onPageChange = (page) => setCurrentPage(page);
 

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import useAxiosPrivate from "../hooks/useAxios";
+import useAxios from "../hooks/useAxios";
 import { useAuth } from "../hooks/AuthContext";
 import { Outlet, useLocation } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
-import RefreshToken from "../hooks/RefreshToken";
 
 const Authentications = () => {
   const { setUserValue } = useAuth();
-  const axiosPrivateInstance = useAxiosPrivate();
+  const axiosPrivateInstance = useAxios();
   const [loading, setLoading] = useState(true);
   const localtion = useLocation();
 
@@ -16,7 +15,6 @@ const Authentications = () => {
 
     async function verifyUser() {
       try {
-        await RefreshToken();
         if ("token" in localStorage) {
           const { data } = await axiosPrivateInstance.get("/user");
           setUserValue(data);
