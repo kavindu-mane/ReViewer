@@ -16,6 +16,7 @@ const Review = lazy(() => import("./pages/user/Review.User"));
 const Profile = lazy(() => import("./pages/user/Profile.User"));
 const AdminUsers = lazy(() => import("./components/admin/Users.Manage.Admin"));
 const AdminBooks = lazy(() => import("./components/admin/Books.Manage.Admin"));
+const Dashboard = lazy(() => import("./components/admin/Dashboard.Admin"));
 
 const LinkArray = {
   "/login": <Login />,
@@ -51,7 +52,15 @@ function App() {
 
             {/* admin dashboard routing */}
             <Route path="/admin" element={<Authentications />}>
-              <Route index exact element={<AdminDashboard />} />
+              <Route
+                index
+                exact
+                element={
+                  <AdminDashboard>
+                    <Dashboard />
+                  </AdminDashboard>
+                }
+              />
               <Route
                 path="users"
                 element={
