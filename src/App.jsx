@@ -14,11 +14,12 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Books = lazy(() => import("./pages/user/Books.User"));
 const Review = lazy(() => import("./pages/user/Review.User"));
 const Profile = lazy(() => import("./pages/user/Profile.User"));
+const AdminUsers = lazy(() => import("./components/admin/Users.Manage.Admin"));
+const AdminBooks = lazy(() => import("./components/admin/Books.Manage.Admin"));
 
 const LinkArray = {
   "/login": <Login />,
   "/register": <Register />,
-  "/admin": <AdminDashboard />,
   "/books": <Books />,
   "/profile": <Profile />,
   "/*": <Error />,
@@ -39,13 +40,34 @@ function App() {
             </p>
           }
         >
-          <ToastContainer/>
+          <ToastContainer />
           <Routes>
             <Route path="/" element={<Authentications />}>
               <Route index exact element={<Home />} />
               {Object.keys(LinkArray).map((key) => {
                 return <Route key={key} path={key} element={LinkArray[key]} />;
               })}
+            </Route>
+
+            {/* admin dashboard routing */}
+            <Route path="/admin" element={<Authentications />}>
+              <Route index exact element={<AdminDashboard />} />
+              <Route
+                path="users"
+                element={
+                  <AdminDashboard>
+                    <AdminUsers />
+                  </AdminDashboard>
+                }
+              />
+              <Route
+                path="books"
+                element={
+                  <AdminDashboard>
+                    <AdminBooks />
+                  </AdminDashboard>
+                }
+              />
             </Route>
           </Routes>
         </Suspense>
