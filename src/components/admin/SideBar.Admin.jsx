@@ -4,7 +4,7 @@ import { HiChartPie, HiUser } from "react-icons/hi";
 import { MdBook } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
 import Logout from "../../hooks/Logout";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const sidebarItems = [
   {
@@ -20,12 +20,14 @@ const sidebarItems = [
   {
     icon: HiUser,
     text: "Manage Users",
-    path: "admin/users",
+    path: "/admin/users",
   },
 ];
 
-const SideBar = ({ openElement = 0 }) => {
+const SideBar = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+
   return (
     <Sidebar className="h-full w-72">
       {/* sidebar items */}
@@ -38,7 +40,7 @@ const SideBar = ({ openElement = 0 }) => {
                 onClick={() => navigate(item?.path)}
                 className={
                   "cursor-pointer " +
-                  (openElement === key
+                  (location.pathname.replace(/\/+$/, "") === item?.path
                     ? "child-svg-white !bg-blue-600 !text-white"
                     : "")
                 }

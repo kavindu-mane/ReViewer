@@ -1,9 +1,8 @@
 import React, { useState, lazy } from "react";
 const NavBar = lazy(() => import("../components/admin/NavBar.Admin"));
 const SideBar = lazy(() => import("../components/admin/SideBar.Admin"));
-const Users = lazy(() => import("../components/admin/Users.Manage.Admin"));
 
-const AdminDashboard = () => {
+const AdminDashboard = ({children}) => {
   const [isSideBarOpend, setIsSideBarOpend] = useState(false);
 
   return (
@@ -31,7 +30,7 @@ const AdminDashboard = () => {
           {/* content area */}
           <div className="w-full grow">
             <div className="no-scrollbar h-full overflow-y-auto">
-              <Users />
+              {children}
             </div>
           </div>
         </div>
