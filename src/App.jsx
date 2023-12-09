@@ -40,7 +40,7 @@ function App() {
             </p>
           }
         >
-          <ToastContainer />
+          <ToastContainer limit={1} />
           <Routes>
             <Route path="/" element={<Authentications />}>
               <Route index exact element={<Home />} />

@@ -10,23 +10,38 @@ import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import useAxios from "../../../../hooks/useAxios";
 import tostDefault from "../../../../data/tostDefault";
+import Swal from "sweetalert2";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const UserTable = () => {
+  const [search] = useSearchParams();
   const [accountStatus, setAccountStatus] = useState("active");
+  const [paginationData, setPaginationData] = useState({});
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(search.get("page") || 1);
   const [users, setUsers] = useState();
   const axiosPrivateInstance = useAxios();
-  // page changing function
-  const onPageChange = (page) => setCurrentPage(page);
+  const navigate = useNavigate();
 
+  // page changing function
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+    navigate("?page=" + page);
+  };
+
+  // load users based on user status
   const loadUsers = useCallback(async () => {
     setUsers();
     await axiosPrivateInstance
-      .post("/admin/users", { status: accountStatus })
+      .post("/admin/users", {
+        status: accountStatus,
+        page: currentPage,
+        search: searchKeyword,
+      })
       .then((response) => {
         if (response?.status === 200) {
-          setUsers(response?.data);
+          setUsers(response?.data?.users);
+          setPaginationData(response?.data?.meta);
         }
       })
       .catch((error) => {
@@ -37,24 +52,72 @@ const UserTable = () => {
           closeButton: true,
         });
       });
-  }, [setUsers, accountStatus]);
+  }, [setUsers, accountStatus, currentPage, searchKeyword]);
+
+  // update user status
+  const changeUserStatus = async (status, email) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action affected to selected user",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, change!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const id = toast.loading("Please wait...", tostDefault);
+        await axiosPrivateInstance
+          .post("/admin/users/update", { status: status, email: email })
+          .then((response) => {
+            if (response?.status === 200) {
+              toast.update(id, {
+                ...tostDefault,
+                render: "Update successful",
+                type: "success",
+                isLoading: false,
+                closeButton: true,
+              });
+
+              loadUsers();
+            }
+          })
+          .catch((error) => {
+            toast.update(id, {
+              ...tostDefault,
+              render: "Something went wrong",
+              type: "error",
+              isLoading: false,
+              closeButton: true,
+            });
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        toast("Cancel account status change", {
+          ...tostDefault,
+          type: "info",
+          isLoading: false,
+          closeButton: true,
+        });
+      }
+    });
+  };
 
   useEffect(() => {
     loadUsers();
-  }, [loadUsers, accountStatus]);
+  }, [loadUsers, accountStatus, currentPage, searchKeyword]);
 
   return (
     <section className="w-full p-0 md:p-2">
       <div className="mx-auto max-w-screen-xl">
         <div className="relative">
           {/* heading section */}
-          <div className="flex flex-col items-center justify-between space-y-3 py-4 md:flex-row md:space-x-4 md:space-y-0">
+          <div className="flex flex-col items-center justify-between space-y-3 px-2 py-4 md:flex-row md:space-x-4 md:space-y-0">
             <div className="w-full lg:w-1/2">
               {/* search */}
               <TextInput
                 type="text"
                 sizing={"sm"}
-                placeholder="Search users..."
+                placeholder="Search users by name or email"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
                 className="inputs flex w-full md:me-5"
@@ -83,61 +146,80 @@ const UserTable = () => {
             </div>
           </div>
           {/* table section */}
-          <Table
-            striped
-            hoverable
-            className="rounded-lg ring-1 ring-gray-300 dark:ring-gray-600"
-          >
-            {/* table heading */}
-            <Table.Head>
-              <Table.HeadCell className="bg-gray-300">Name</Table.HeadCell>
-              <Table.HeadCell className="bg-gray-300">Email</Table.HeadCell>
-              <Table.HeadCell className="bg-gray-300">Birth Day</Table.HeadCell>
-              <Table.HeadCell className="bg-gray-300">
-                Total Reviews
-              </Table.HeadCell>
-              <Table.HeadCell className="bg-gray-300">Action</Table.HeadCell>
-            </Table.Head>
-            {/* table body */}
-            {users &&
-              users?.map((user, key) => {
-                return (
-                  <Table.Body key={key} className="divide-y">
-                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell className="font-medium">
-                        {user?.name}
-                      </Table.Cell>
-                      <Table.Cell> {user?.email}</Table.Cell>
-                      <Table.Cell> {user?.birth_date}</Table.Cell>
-                      <Table.Cell>$2999</Table.Cell>
-                      <Table.Cell>
-                        <Button size={"xs"} className="min-w-[5rem]">
-                          Active
-                        </Button>
-                      </Table.Cell>
-                    </Table.Row>
-                  </Table.Body>
-                );
-              })}
-          </Table>
+          <div className="overflow-x-auto p-2">
+            <Table
+              hoverable
+              className="rounded-lg ring-1 ring-gray-300 dark:ring-gray-600"
+            >
+              {/* table heading */}
+              <Table.Head>
+                <Table.HeadCell className="bg-gray-300">Name</Table.HeadCell>
+                <Table.HeadCell className="bg-gray-300">Email</Table.HeadCell>
+                <Table.HeadCell className="bg-gray-300">
+                  Birth Day
+                </Table.HeadCell>
+                <Table.HeadCell className="bg-gray-300">
+                  Total Reviews
+                </Table.HeadCell>
+                <Table.HeadCell className="bg-gray-300">Action</Table.HeadCell>
+              </Table.Head>
+              {/* table body */}
+              {users &&
+                users?.map((user, key) => {
+                  return (
+                    <Table.Body
+                      key={key}
+                      className="divide-y border-b dark:border-gray-700"
+                    >
+                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell className="font-medium">
+                          {user?.name}
+                        </Table.Cell>
+                        <Table.Cell> {user?.email}</Table.Cell>
+                        <Table.Cell> {user?.birth_date}</Table.Cell>
+                        <Table.Cell>$2999</Table.Cell>
+                        <Table.Cell>
+                          <Button
+                            size={"xs"}
+                            className="min-w-[5rem]"
+                            onClick={() =>
+                              changeUserStatus(
+                                accountStatus === "active"
+                                  ? "deactivate"
+                                  : "active",
+                                user?.email,
+                              )
+                            }
+                          >
+                            {accountStatus === "active"
+                              ? "Deactivate"
+                              : "Active"}
+                          </Button>
+                        </Table.Cell>
+                      </Table.Row>
+                    </Table.Body>
+                  );
+                })}
+            </Table>
+          </div>
           {/* footer section */}
           <nav className="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0">
             {/* total record count */}
             <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
               Showing
               <span className="mx-2 font-semibold text-gray-900 dark:text-white">
-                1 - 10
+                {paginationData?.start ?? 0} - {paginationData?.end ?? 0}
               </span>
               of
               <span className="mx-2 font-semibold text-gray-900 dark:text-white">
-                1000
+                {paginationData?.count ?? 0}
               </span>
             </span>
             {/* pagination */}
             <Pagination
               layout="navigation"
               currentPage={currentPage}
-              totalPages={100}
+              totalPages={paginationData?.page_count || 1}
               onPageChange={(page) => onPageChange(page)}
               showIcons
             />

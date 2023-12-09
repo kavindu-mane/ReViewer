@@ -2,10 +2,12 @@ import { useAuth } from "./AuthContext";
 import useAxios from "./useAxios";
 import { toast } from "react-toastify";
 import tostDefault from "../data/tostDefault";
+import { useNavigate } from "react-router-dom";
 
-const Logout = ({ children }) => {
+const Logout = ({ children, isNavigate = true }) => {
   const axiosPrivateInstance = useAxios();
   const { setUserValue } = useAuth();
+  const navigate = useNavigate();
 
   const logout = async () => {
     const id = toast.loading("Please wait...", tostDefault);
@@ -23,6 +25,7 @@ const Logout = ({ children }) => {
             isLoading: false,
             closeButton: true,
           });
+          if (isNavigate) navigate("/");
         } else {
           toast.update(id, {
             ...tostDefault,

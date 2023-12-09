@@ -167,7 +167,7 @@ const Login = () => {
               </p>
               {/* buttons */}
               <div className="flex w-full space-x-2">
-                <Logout>
+                <Logout isNavigate={false}>
                   <Button type="submit" className="mt-5 w-full">
                     Logout
                   </Button>

@@ -6,8 +6,8 @@ const tostDefault = {
   autoClose: 3000,
   hideProgressBar: true,
   closeOnClick: true,
-  pauseOnFocusLoss: true,
-  pauseOnHover: true,
+  pauseOnFocusLoss: false,
+  pauseOnHover: false,
   theme: "colored",
 };
 

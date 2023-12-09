@@ -67,7 +67,7 @@ const Register = () => {
 
   return (
     <React.Fragment>
-      <div className="relative flex min-h-screen flex-col items-center justify-between">
+      <div className="relative flex h-full min-h-screen flex-col items-center justify-between">
         <NavBarSecondary />
         {/* background */}
         <img
@@ -76,7 +76,7 @@ const Register = () => {
           className="pointer-events-none absolute top-0 -z-50 h-screen w-screen object-cover"
         />
         {/*register card */}
-        <div className="my-10 w-[96%] rounded-lg border border-gray-200 bg-white shadow-xl drop-shadow-xl dark:border-slate-800 dark:bg-slate-800 sm:w-full sm:max-w-md lg:max-w-2xl">
+        <div className="relative z-20 my-10 w-[96%] rounded-lg border border-gray-200 bg-white shadow-xl drop-shadow-xl dark:border-slate-800 dark:bg-slate-800 sm:w-full sm:max-w-md lg:max-w-2xl">
           {/* register window */}
           {!user && (
             <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
@@ -123,14 +123,15 @@ const Register = () => {
                       />
                     </div>
                     {/* birthday */}
-                    <div>
+                    <div className="relative">
                       <div className="mb-2 block">
                         <Label htmlFor="birth_date" value="Birthday" />
                       </div>
                       <Datepicker
                         id="birth_date"
                         name="birth_date"
-                        className="inputs"
+                        className="inputs relative"
+                        size={"xs"}
                         showClearButton={false}
                         showTodayButton={false}
                         maxDate={
@@ -260,7 +261,7 @@ const Register = () => {
               </p>
               {/* buttons */}
               <div className="flex w-full space-x-2">
-                <Logout>
+                <Logout isNavigate={false}>
                   <Button type="submit" className="mt-5 w-full">
                     Logout
                   </Button>
