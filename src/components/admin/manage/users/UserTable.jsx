@@ -51,6 +51,7 @@ const UserTable = () => {
           isLoading: false,
           closeButton: true,
         });
+        navigate("/login");
       });
   }, [setUsers, accountStatus, currentPage, searchKeyword]);
 
@@ -90,9 +91,10 @@ const UserTable = () => {
               isLoading: false,
               closeButton: true,
             });
+            navigate("/login");
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        toast("Cancel account status change", {
+        toast("Account status change canceled", {
           ...tostDefault,
           type: "info",
           isLoading: false,

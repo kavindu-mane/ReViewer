@@ -8,12 +8,14 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import tostDefault from "../data/tostDefault";
 import Logout from "../hooks/Logout";
+import useAxios from "../hooks/useAxios";
 const NavBarSecondary = lazy(() => import("../components/NavBarSecondary"));
 const FooterSecondary = lazy(() => import("../components/FooterSecondary"));
 
 const Login = () => {
-  const { user } = useAuth();
+  const { user, setUserValue } = useAuth();
   const [error, setError] = useState(null);
+  const axiosPrivateInstance = useAxios();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -27,7 +29,6 @@ const Login = () => {
     await axios
       .post("/login", formData)
       .then((response) => {
-        setLoading(false);
         if (response.data?.details === undefined) {
           toast.update(id, {
             ...tostDefault,
@@ -38,8 +39,12 @@ const Login = () => {
           });
           localStorage.setItem("token", response?.data?.access);
           localStorage.setItem("csrf", response?.data?.csrf);
-          if (response?.data?.status) navigate("/admin", { replace: true });
-          else navigate("/", { replace: true });
+          if (response?.data?.status) {
+            const { data } = axiosPrivateInstance.get("/user");
+            setUserValue(data);
+            navigate("/admin", { replace: true });
+          } else navigate("/", { replace: true });
+          setLoading(false);
         } else {
           toast.dismiss(id);
           setError(response.data?.details);

@@ -6,6 +6,7 @@ import axios from "axios";
 import Authentications from "./pages/Authentications";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AuthMiddleware from "./middleware/Auth";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -48,35 +49,35 @@ function App() {
               {Object.keys(LinkArray).map((key) => {
                 return <Route key={key} path={key} element={LinkArray[key]} />;
               })}
-            </Route>
 
-            {/* admin dashboard routing */}
-            <Route path="/admin" element={<Authentications />}>
-              <Route
-                index
-                exact
-                element={
-                  <AdminDashboard>
-                    <Dashboard />
-                  </AdminDashboard>
-                }
-              />
-              <Route
-                path="users"
-                element={
-                  <AdminDashboard>
-                    <AdminUsers />
-                  </AdminDashboard>
-                }
-              />
-              <Route
-                path="books"
-                element={
-                  <AdminDashboard>
-                    <AdminBooks />
-                  </AdminDashboard>
-                }
-              />
+              {/* admin dashboard routing */}
+              <Route path="/admin" element={<AuthMiddleware />}>
+                <Route
+                  index
+                  exact
+                  element={
+                    <AdminDashboard>
+                      <Dashboard />
+                    </AdminDashboard>
+                  }
+                />
+                <Route
+                  path="users"
+                  element={
+                    <AdminDashboard>
+                      <AdminUsers />
+                    </AdminDashboard>
+                  }
+                />
+                <Route
+                  path="books"
+                  element={
+                    <AdminDashboard>
+                      <AdminBooks />
+                    </AdminDashboard>
+                  }
+                />
+              </Route>
             </Route>
           </Routes>
         </Suspense>
