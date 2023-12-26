@@ -1,0 +1,76 @@
+:root {
+  --duration: 30s;
+}
+.wrapper-images {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  opacity: 0.8;
+  transform: translate3d(-50%, -50%, 0) perspective(800px) rotatey(10deg)
+    rotateX(-10deg);
+}
+.images-line {
+  animation: runner var(--duration) linear infinite;
+  display: flex;
+  transform: translateX(23%);
+}
+.iterations:nth-child(odd) .images-line:nth-child(even),
+.iterations:nth-child(even) .images-line:nth-child(odd) {
+  animation-duration: calc(var(--duration) * 1.5);
+}
+.images-line .line {
+  background-position: 50% 50%;
+  background-size: cover;
+  flex: none;
+  height: 25vh;
+  margin: clamp(10px, 2vw, 20px);
+  width: 18vh;
+  position: relative;
+  transition: ease-in-out all 0.3s;
+  border-radius: 1rem;
+}
+.images-line .line .img {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-position: 50% 50%;
+  background-size: cover;
+  transition: ease-in-out all 0.3s;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+.images-line .line:hover .img {
+  cursor: pointer;
+  transform: scale(1.1) translatez(0px);
+}
+.images-line .line:hover::after {
+  filter: blur(35px) opacity(0.8);
+}
+
+.images-line .line::after {
+  content: "";
+  background: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  top: 3vh;
+  position: absolute;
+  background-size: cover;
+  z-index: -1;
+  transition: ease-in-out all 0.3s;
+  filter: blur(25px) opacity(0.8);
+}
+
+@keyframes runner {
+  to {
+    transform: translateX(-10.4%);
+  }
+}
