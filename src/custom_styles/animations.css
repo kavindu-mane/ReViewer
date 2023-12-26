@@ -1,0 +1,33 @@
+/* animated logo styles - start */
+.logo-animate {
+  animation: 3s infinite alternate animate-stroke;
+}
+
+@keyframes animate-stroke {
+  0%,
+  10% {
+    fill: greenyellow;
+    stroke: white;
+    stroke-width: 3;
+    stroke-dashoffset: 25%;
+    stroke-dasharray: 0 32%;
+  }
+
+  50% {
+    fill: transparent;
+    stroke: white;
+    stroke-width: 3;
+  }
+
+  90%,
+  100% {
+    fill: white;
+    stroke: transparent;
+    stroke-width: 0;
+    stroke-dashoffset: -25%;
+    stroke-dasharray: 32% 0;
+  }
+}
+
+/* animated logo styles - end */
+

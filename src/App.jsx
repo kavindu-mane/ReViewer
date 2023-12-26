@@ -6,7 +6,12 @@ import axios from "axios";
 import Authentications from "./pages/Authentications";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./custom_styles/animations.css";
 import AuthMiddleware from "./middleware/Auth";
+import Lenis from "@studio-freight/lenis";
+import { ScrollTrigger } from "gsap/all";
+import gsap from "gsap";
+import CursorEffect from "./components/CursorEffect";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -32,8 +37,19 @@ function App() {
   axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
   ThemeSitcher();
 
+  // lenis setup - start
+  const lenis = new Lenis();
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0);
+  // lenis setup - end
+
   return (
     <React.Fragment>
+      {/* cursor effect */}
+      <CursorEffect />
       <Router>
         <Suspense
           fallback={
