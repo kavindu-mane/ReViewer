@@ -4,7 +4,6 @@ import { Dropdown } from "flowbite-react";
 import ThemeSwitcher from "../functions/ThemeSwitcher";
 
 const ThemeButton = () => {
-
   const themeIcons = {
     dark: <MdDarkMode className="h-5 w-5" />,
     light: <MdSunny className="h-5 w-5" />,
@@ -24,7 +23,7 @@ const ThemeButton = () => {
   }, [currentTheme]);
 
   return (
-    <div className="text-sla mx-5 h-fit w-fit rounded-md p-1.5 dark:text-white">
+    <div className="h-9 w-9 rounded-full p-2 text-slate-800 duration-200 dark:text-white">
       <Dropdown
         inline
         label={themeIcons[currentTheme]}
@@ -32,6 +31,7 @@ const ThemeButton = () => {
         arrowIcon={false}
       >
         <Dropdown.Item
+          className="hover:!bg-slate-300 dark:hover:!bg-slate-600"
           onClick={() => {
             setCurrentTheme("dark");
             localStorage.theme = "dark";
@@ -40,6 +40,7 @@ const ThemeButton = () => {
           {themeIcons.dark} &ensp;Dark
         </Dropdown.Item>
         <Dropdown.Item
+          className="hover:!bg-slate-300 dark:hover:!bg-slate-600"
           onClick={() => {
             setCurrentTheme("light");
             localStorage.theme = "light";
@@ -48,6 +49,7 @@ const ThemeButton = () => {
           {themeIcons.light} &ensp;Light
         </Dropdown.Item>
         <Dropdown.Item
+          className="hover:!bg-slate-300 dark:hover:!bg-slate-600"
           onClick={() => {
             setCurrentTheme("default");
             localStorage.removeItem("theme");

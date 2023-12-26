@@ -15,7 +15,9 @@ const NavBarSecondary = () => {
           ReViewer
         </span>
       </Navbar.Brand>
-      <ThemeButton />
+      <div className="rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">
+        <ThemeButton />
+      </div>
     </Navbar>
   );
 };

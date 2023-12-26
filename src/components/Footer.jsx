@@ -1,18 +1,24 @@
-import React from "react";
+import React, { lazy } from "react";
+const ThemeButton = lazy(() => import("./ThemeButton"));
 
 const Footer = () => {
   return (
     <footer className="w-screen bg-slate-800 shadow dark:bg-gray-950">
       <div className="mx-auto w-full max-w-screen-xl p-4 md:py-8">
         <div className="font-Poppins sm:flex sm:items-center sm:justify-between">
-          <a
-            href="/"
-            className="mb-4 flex items-center space-x-3 rtl:space-x-reverse sm:mb-0"
-          >
-            <span className="self-center whitespace-nowrap text-2xl font-medium text-sky-500 dark:text-sky-400">
-              ReViewer
-            </span>
-          </a>
+          <div className="flex items-center justify-between">
+            <a
+              href="/"
+              className="mb-4 flex items-center space-x-3 rtl:space-x-reverse sm:mb-0"
+            >
+              <span className="self-center whitespace-nowrap text-2xl font-medium text-sky-500 dark:text-sky-400">
+                ReViewer
+              </span>
+            </a>
+            <div className="child:!text-white ms-5 rounded-full hover:bg-slate-700 md:hidden">
+              <ThemeButton />
+            </div>
+          </div>
           <ul className="mb-6 flex flex-wrap items-center text-sm font-medium text-gray-300 sm:mb-0">
             <li>
               <a href="/about" className="me-4 hover:underline md:me-6">
