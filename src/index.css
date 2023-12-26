@@ -39,3 +39,7 @@ input[type="number"] {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.apexcharts-legend-text {
+  @apply !text-slate-800 dark:!text-white;
+}
