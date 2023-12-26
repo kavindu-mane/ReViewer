@@ -1,14 +1,18 @@
 import React from "react";
-import { Label, TextInput, Select } from "flowbite-react";
+import { Label, TextInput, Select, Textarea,Button } from "flowbite-react";
+import bookCategory from "../../../../data/Admin/bookCategory";
 
 const AddBook = () => {
+  const startYear = new Date().getFullYear() - 100;
   return (
-    <div className="max-w-4xl">
-      <div className="mb-9 font-Poppins text-2xl font-medium">Add new Book</div>
+    <div className="w-full max-w-4xl mt-10">
+      <div className="mb-9 text-center font-Poppins text-2xl font-medium">
+        Add new Book
+      </div>
       <form className="flex flex-col gap-4">
         <div className="w-full space-y-4">
           {/* ISBN Registration number */}
-          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+          <div className="mb-2 block space-y-1">
             <Label
               htmlFor="regno"
               value="Book Reg.No"
@@ -24,7 +28,7 @@ const AddBook = () => {
             />
           </div>
           {/* Title of the book */}
-          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+          <div className="mb-2 block space-y-1">
             <Label
               htmlFor="title"
               value="Book Title"
@@ -40,7 +44,7 @@ const AddBook = () => {
             />
           </div>
           {/* Author's Name */}
-          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+          <div className="mb-2 block space-y-1">
             <Label
               htmlFor="authorname"
               value="Author name"
@@ -56,7 +60,7 @@ const AddBook = () => {
             />
           </div>
           {/* Book Category */}
-          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+          <div className="mb-2 block space-y-1">
             <Label
               htmlFor="book-category"
               value="Book Category"
@@ -70,49 +74,43 @@ const AddBook = () => {
               defaultValue={"car"}
               className="inputs"
             >
-              <option value="Adventure">Adventure Fiction</option>
-              <option value="Arts-&-New-Media">Arts & New Media</option>
-              <option value="Business-Literature">Business Literature</option>
-              <option value="Crime">Crime</option>
-              <option value="Detective">Detective</option>
-              <option value="Fantasy">Fantasy</option>
-              <option value="Health-fitness">Health,Fitness & Dieting</option>
-              <option value="History">History</option>
-              <option value="Horror">Horror</option>
-              <option value="Love-story">Love Story</option>
-              <option value="Mystery-Thriller">
-                Mystery,Thriller & Suspense
-              </option>
-              <option value="Poetry">Poetry</option>
-              <option value="Psychology">Psychology</option>
-              <option value="Religion">Religion</option>
-              <option value="Romance">Romance</option>
-              <option value="Scinece Fiction">Scinece Fiction</option>
-              <option value="Spirituality">Spirituality</option>
-              <option value="Sports">Sports</option>
-              <option value="Travel">Travel</option>
-              <option value="Young-Adult">Young Adult</option>
+              {bookCategory.map((category, i) => {
+                return (
+                  <option key={i} value={category}>
+                    {category}
+                  </option>
+                );
+              })}
             </Select>
           </div>
 
           {/* Published Year */}
-          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+          <div className="mb-2 block space-y-1">
             <Label
               htmlFor="pubyear"
               value="Year of Publishing"
               className="after:ml-0.5 after:text-red-500 after:content-['*']"
             />
-            <TextInput
+            <Select
               id="pubyear"
-              //   placeholder="01-01-1998"
               required
               type="date"
               name="pubyear"
               className="inputs"
-            />
+            >
+              {Array.from({ length: 101 }, (_, index) => index + startYear).map(
+                (pubyear, i) => {
+                  return (
+                    <option key={i} value={pubyear}>
+                      {pubyear}
+                    </option>
+                  );
+                },
+              )}
+            </Select>
           </div>
           {/* Language of the book */}
-          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+          <div className="mb-2 block space-y-1">
             <Label
               htmlFor="language"
               value="Language"
@@ -128,7 +126,7 @@ const AddBook = () => {
             />
           </div>
           {/* Price of the book */}
-          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row md:justify-between">
+          <div className="mb-2 block space-y-1">
             <Label
               htmlFor="price"
               value="Price"
@@ -142,6 +140,28 @@ const AddBook = () => {
               name="price"
               className="inputs"
             />
+          </div>
+          {/* Description about the book */}
+          <div className="mb-2 block space-y-1">
+            <Label
+              htmlFor="description"
+              value="Description"
+              className="after:ml-0.5 after:text-red-500 after:content-['*']"
+            />
+            <Textarea
+              id="description"
+              placeholder=""
+              required
+              type="text"
+              name="description"
+              className="inputs"
+              rows={8}
+            />
+          </div>
+          <div className="flex justify-end">
+            <Button type="submit" className="mt-2">
+              Add this book
+            </Button>
           </div>
         </div>
       </form>
