@@ -1,0 +1,23 @@
+const bookCategoryArray = [
+  "Adventure Fiction",
+  "Arts & New Media",
+  "Business Literature",
+  "Crime",
+  "Detective",
+  "Fantasy",
+  "Health,Fitness & Dieting",
+  "History",
+  "Horror",
+  "Love Story",
+  "Mystery,Thriller & Suspense",
+  "Poetry",
+  "Psychology",
+  "Religion",
+  "Romance",
+  "Scinece Fiction",
+  "Spirituality",
+  "Sports",
+  "Travel",
+  "Young Adult",
+];
+export default bookCategoryArray;
