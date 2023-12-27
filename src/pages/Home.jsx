@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import categotiesData from "../data/categoriesData";
 import AnimatedTextSections from "../components/home/AnimatedTextSections";
+import { Button } from "flowbite-react";
 const NavBar = lazy(() => import("../components/NavBar"));
 const Footer = lazy(() => import("../components/Footer"));
 const Parallax = lazy(() => import("../components/home/Parallax"));
@@ -67,28 +68,47 @@ const Home = () => {
         </section>
 
         {/* categoties */}
-        <section className="relative mb-16 h-fit w-full p-3 py-24 after:absolute after:inset-0 after:-z-10 after:-skew-y-6 after:bg-gradient-to-tr after:from-sky-700 after:to-fuchsia-600 lg:px-6">
+        <section className="relative mb-16 h-fit w-full p-3 py-24 after:absolute after:inset-0 after:-z-10 after:-skew-y-6 after:bg-gradient-to-tr after:from-sky-700 after:to-fuchsia-600 after:shadow-2xl after:drop-shadow-2xl lg:px-6">
           <div className="entries">
             <div className="left_entries">
               <AnimatedTextSections
                 data={categotiesData}
                 title={"Top Categories"}
-                position={"end"}
               />
             </div>
           </div>
         </section>
 
-        <section className="relative mb-16 h-fit w-full p-3 py-24 after:absolute after:inset-0 after:-z-10 after:skew-y-6 after:bg-gradient-to-tr after:from-sky-700 after:to-fuchsia-600 lg:px-6">
+        {/*  */}
+        <section className="relative mb-16 h-fit w-full p-3 py-24 after:absolute after:inset-0 after:-z-10 after:skew-y-6 after:bg-gradient-to-tr after:from-amber-400 after:to-pink-500 after:shadow-2xl after:drop-shadow-2xl lg:px-6">
           <div className="entries">
             <div className="right_entries flex w-full flex-col items-end">
               <AnimatedTextSections
                 data={categotiesData}
                 title={"Top Categories"}
-                position={"start"}
+                position={"start-8"}
+                itemAlign={"items-end"}
+                itemTransLate={"hover:-translate-x-8"}
               />
             </div>
           </div>
+        </section>
+
+        {/* register */}
+        <section className="flex w-full flex-col items-center px-2">
+          <h2 className="text-center font-Poppins text-xl font-medium md:text-2xl xl:text-3xl">
+            Don't have Account ? Register
+            <span className="after:content[''] relative ms-2 translate-y-10 p-1 px-2 text-white after:absolute after:inset-0 after:-z-[2] after:-skew-y-[5deg] after:bg-emerald-600">
+              Today
+            </span>
+          </h2>
+          <Button
+            href="/register"
+            size={"sm"}
+            className="my-10 min-w-[15rem] max-w-xs  rounded-[5px] font-Poppins shadow-md drop-shadow-md duration-300 hover:bg-sky-800 dark:hover:bg-sky-800"
+          >
+            Register
+          </Button>
         </section>
 
         {/* footer */}
