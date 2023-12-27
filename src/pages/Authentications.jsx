@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAxios from "../hooks/useAxios";
 import { useAuth } from "../hooks/AuthContext";
 import { Outlet, useLocation } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const Authentications = () => {
   const { setUserValue } = useAuth();
@@ -33,7 +33,7 @@ const Authentications = () => {
     };
   }, [localtion.pathname]);
 
-  return loading ? <LoadingSpinner /> : <Outlet />;
+  return loading ? <LoadingAnimation /> : <Outlet />;
 };
 
 export default Authentications;

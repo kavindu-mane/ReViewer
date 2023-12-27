@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { CgSpinnerTwoAlt } from "react-icons/cg";
 import ThemeSitcher from "./functions/ThemeSwitcher";
 import axios from "axios";
 import Authentications from "./pages/Authentications";
@@ -12,6 +11,7 @@ import Lenis from "@studio-freight/lenis";
 import { ScrollTrigger } from "gsap/all";
 import gsap from "gsap";
 import CursorEffect from "./components/CursorEffect";
+import LoadingAnimation from "./components/LoadingAnimation";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -51,13 +51,7 @@ function App() {
       {/* cursor effect */}
       <CursorEffect />
       <Router>
-        <Suspense
-          fallback={
-            <p className="flex h-screen items-center justify-center text-lg italic">
-              <CgSpinnerTwoAlt className="h-20 w-20 animate-spin text-emerald-400" />
-            </p>
-          }
-        >
+        <Suspense fallback={<LoadingAnimation />}>
           <ToastContainer limit={1} />
           <Routes>
             <Route path="/" element={<Authentications />}>

@@ -29,5 +29,34 @@
   }
 }
 
-/* animated logo styles - end */
+/* animated logo styles - start */
+.loading-animation {
+  animation: 3s infinite alternate animate-loader;
+}
 
+@keyframes animate-loader {
+  0%,
+  10% {
+    @apply fill-sky-500 stroke-sky-500;
+    stroke-width: 3;
+    stroke-dashoffset: 25%;
+    stroke-dasharray: 0 32%;
+  }
+
+  50% {
+    fill: transparent;
+    @apply stroke-sky-500;
+    stroke-width: 3;
+  }
+
+  90%,
+  100% {
+    @apply fill-sky-500;
+    stroke: transparent;
+    stroke-width: 0;
+    stroke-dashoffset: -25%;
+    stroke-dasharray: 32% 0;
+  }
+}
+
+/* animated logo styles - end */
