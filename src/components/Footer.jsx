@@ -31,11 +31,6 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="/terms" className="me-4 hover:underline md:me-6">
-                T&C
-              </a>
-            </li>
-            <li>
               <a href="/cantact" className="hover:underline">
                 Contact
               </a>

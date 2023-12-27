@@ -16,6 +16,9 @@ const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Error = lazy(() => import("./pages/Error"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Contact = lazy(() => import("./pages/Contact"));
+const About = lazy(() => import("./pages/About"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Books = lazy(() => import("./pages/user/Books.User"));
 const Review = lazy(() => import("./pages/user/Review.User"));
@@ -29,6 +32,9 @@ const LinkArray = {
   "/register": <Register />,
   "/books": <Books />,
   "/profile": <Profile />,
+  "/privacy": <Privacy />,
+  "/contact": <Contact />,
+  "/about": <About />,
   "/*": <Error />,
 };
 
