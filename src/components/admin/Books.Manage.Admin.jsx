@@ -6,7 +6,7 @@ const Books = () => {
   return (
     <React.Fragment>
       <div className="flex w-full flex-col items-center justify-center p-2 md:p-5">
-        <FindBook />
+        {/* <FindBook /> */}
         <AddBook />
       </div>
     </React.Fragment>

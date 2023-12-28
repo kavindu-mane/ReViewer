@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useRef, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ThemeSitcher from "./functions/ThemeSwitcher";
 import axios from "axios";
@@ -7,9 +7,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./custom_styles/animations.css";
 import AuthMiddleware from "./middleware/Auth";
-import Lenis from "@studio-freight/lenis";
-import { ScrollTrigger } from "gsap/all";
-import gsap from "gsap";
 import CursorEffect from "./components/CursorEffect";
 import LoadingAnimation from "./components/LoadingAnimation";
 const Home = lazy(() => import("./pages/Home"));
@@ -43,14 +40,7 @@ function App() {
   axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
   ThemeSitcher();
 
-  // lenis setup - start
-  const lenis = new Lenis();
-  lenis.on("scroll", ScrollTrigger.update);
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0);
-  // lenis setup - end
+
 
   return (
     <React.Fragment>

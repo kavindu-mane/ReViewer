@@ -2,7 +2,7 @@ import React, { useState, lazy } from "react";
 const NavBar = lazy(() => import("../components/admin/NavBar.Admin"));
 const SideBar = lazy(() => import("../components/admin/SideBar.Admin"));
 
-const AdminDashboard = ({children}) => {
+const AdminDashboard = ({ children }) => {
   const [isSideBarOpend, setIsSideBarOpend] = useState(false);
 
   return (

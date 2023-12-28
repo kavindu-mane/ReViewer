@@ -14,7 +14,7 @@ const bookCategoryArray = [
   "Psychology",
   "Religion",
   "Romance",
-  "Scinece Fiction",
+  "Science Fiction",
   "Spirituality",
   "Sports",
   "Travel",

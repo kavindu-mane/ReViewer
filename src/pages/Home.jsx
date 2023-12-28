@@ -6,12 +6,22 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import categotiesData from "../data/categoriesData";
 import AnimatedTextSections from "../components/home/AnimatedTextSections";
 import { Button } from "flowbite-react";
+import Lenis from "@studio-freight/lenis";
 const NavBar = lazy(() => import("../components/NavBar"));
 const Footer = lazy(() => import("../components/Footer"));
 const Parallax = lazy(() => import("../components/home/Parallax"));
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
+  // lenis setup - start
+  const lenis = new Lenis();
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0);
+  // lenis setup - end
+
   // animate sections with gsap
   useEffect(() => {
     const entries = document.querySelectorAll(".entries");
