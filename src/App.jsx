@@ -40,8 +40,6 @@ function App() {
   axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
   ThemeSitcher();
 
-
-
   return (
     <React.Fragment>
       {/* cursor effect */}
@@ -57,7 +55,7 @@ function App() {
               })}
 
               {/* admin dashboard routing */}
-              <Route path="/admin" element={<AuthMiddleware />}>
+              <Route path="/admin" element={<AuthMiddleware isAdmin={true} />}>
                 <Route
                   index
                   exact

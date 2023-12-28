@@ -88,7 +88,7 @@ const NavBar = () => {
 
           {/* search icon for small screens */}
           <IoMdSearch
-            className="block h-9 w-9 cursor-pointer rounded-full p-2 text-white hover:bg-slate-600 lg:hidden"
+            className="block h-9 w-9 me-3 cursor-pointer rounded-full p-2 text-white hover:bg-slate-600 lg:hidden"
             onClick={() => setOpenModal(true)}
           />
 
@@ -100,7 +100,9 @@ const NavBar = () => {
               label={
                 <Avatar
                   alt={user?.name[0]}
-                  img="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                  img={
+                    import.meta.env.VITE_BASE_URL?.slice(0, -4) + user?.avatar
+                  }
                   rounded
                   size={"sm"}
                   className="m-auto text-xl font-bold"
@@ -135,7 +137,7 @@ const NavBar = () => {
           )}
 
           {/* theme button */}
-          <div className="child:!text-white ms-5 hidden rounded-full hover:bg-slate-600 md:flex">
+          <div className="ms-5 hidden rounded-full hover:bg-slate-600 child:!text-white md:flex">
             <ThemeButton />
           </div>
 
@@ -167,7 +169,7 @@ const NavBar = () => {
 
         {/* nav links */}
         <div className="flex w-full flex-col space-y-2">
-          <Sidebar className="child:bg-white dark:child:bg-slate-800 w-full">
+          <Sidebar className="w-full child:bg-white dark:child:bg-slate-800">
             <Sidebar.Items>
               <Sidebar.ItemGroup className="">
                 {Object.keys(pagesWithPath).map((key, i) => {

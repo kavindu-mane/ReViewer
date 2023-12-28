@@ -5,12 +5,17 @@ import { useDropzone } from "react-dropzone";
 import { BsCloudUpload } from "react-icons/bs";
 import bookCategory from "../../../../data/Admin/bookCategory";
 import tostDefault from "../../../../data/tostDefault";
+import useAxios from "../../../../hooks/useAxios";
 
 const AddBook = () => {
   const startYear = new Date().getFullYear() - 100;
+  const axiosPrivateInstance = useAxios();
   const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({});
+
   // file drop feature
-  const { getRootProps, getInputProps } = useDropzone({
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/png": [".png", ".jpeg", ".jpg"],
     },
@@ -32,11 +37,46 @@ const AddBook = () => {
   // submit details
   const submit = async (e) => {
     e.preventDefault();
-    // setError(null);
-    // setLoading(true);
+    setError(null);
+    setLoading(true);
     const formData = new FormData(e.target);
-    console.log(JSON.stringify(Object.fromEntries(formData)));
-    // const id = toast.loading("Please wait...", tostDefault);
+    if (acceptedFiles.length > 0)
+      formData.append("cover_image", acceptedFiles[0]);
+    const id = toast.loading("Please wait...", tostDefault);
+
+    await axiosPrivateInstance
+      .post("/admin/books/add", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status === 200) {
+          if (response.data?.details === "success") {
+            toast.update(id, {
+              ...tostDefault,
+              render: "Successfully Added",
+              type: "success",
+              isLoading: false,
+              closeButton: true,
+            });
+          } else {
+            toast.dismiss(id);
+            setError(response.data);
+          }
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.update(id, {
+          ...tostDefault,
+          render: "Something went wrong",
+          type: "error",
+          isLoading: false,
+          closeButton: true,
+        });
+      });
   };
 
   useEffect(() => {
@@ -65,6 +105,7 @@ const AddBook = () => {
               type="text"
               name="isbn"
               className="inputs"
+              helperText={<span className="text-red-500">{error?.isbn}</span>}
             />
           </div>
 
@@ -76,46 +117,51 @@ const AddBook = () => {
               className="after:ml-0.5 after:text-red-500 after:content-['*']"
             />
             <TextInput
-              id="booktitle"
-              placeholder="title"
+              id="title"
+              placeholder="Title"
               required
               type="text"
-              name="booktitle"
+              name="title"
               className="inputs"
+              helperText={<span className="text-red-500">{error?.title}</span>}
             />
           </div>
 
           {/* Author's Name */}
           <div className="mb-2 block space-y-1">
             <Label
-              htmlFor="authorname"
+              htmlFor="author"
               value="Author name"
               className="after:ml-0.5 after:text-red-500 after:content-['*']"
             />
             <TextInput
-              id="authorname"
+              id="author"
               placeholder="author's name"
               required
               type="text"
-              name="authorname"
+              name="author"
               className="inputs"
+              helperText={<span className="text-red-500">{error?.author}</span>}
             />
           </div>
 
           {/* Book Category */}
           <div className="mb-2 block space-y-1">
             <Label
-              htmlFor="book-category"
+              htmlFor="category"
               value="Book Category"
               className="after:ml-0.5 after:text-red-500 after:content-['*']"
             />
 
             <Select
-              id="book-category"
-              name="Book Category"
+              id="category"
+              name="category"
               required
               defaultValue={"car"}
               className="inputs"
+              helperText={
+                <span className="text-red-500">{error?.category}</span>
+              }
             >
               {bookCategory.map((category, i) => {
                 return (
@@ -140,6 +186,9 @@ const AddBook = () => {
               type="date"
               name="pubyear"
               className="inputs"
+              helperText={
+                <span className="text-red-500">{error?.pubyear}</span>
+              }
             >
               {Array.from({ length: 101 }, (_, index) => index + startYear).map(
                 (pubyear, i) => {
@@ -167,6 +216,9 @@ const AddBook = () => {
               type="text"
               name="language"
               className="inputs"
+              helperText={
+                <span className="text-red-500">{error?.language}</span>
+              }
             />
           </div>
 
@@ -184,6 +236,7 @@ const AddBook = () => {
               type="text"
               name="price"
               className="inputs"
+              helperText={<span className="text-red-500">{error?.price}</span>}
             />
           </div>
 
@@ -202,6 +255,9 @@ const AddBook = () => {
               name="description"
               className="inputs"
               rows={8}
+              helperText={
+                <span className="text-red-500">{error?.description}</span>
+              }
             />
           </div>
 
@@ -209,7 +265,7 @@ const AddBook = () => {
           <div className="space-y-2">
             <p className="text-sm font-medium">Upload Cover Image</p>
 
-            <div className="container flex w-full items-center justify-center">
+            <div className="flex w-full items-center justify-center">
               <label
                 htmlFor="dropzone-file"
                 {...getRootProps({
@@ -220,11 +276,10 @@ const AddBook = () => {
               >
                 <input
                   {...getInputProps()}
-                  name="cover-image"
-                  id="dropzone-file"
                   className="hidden"
+                  id="dropzone-file"
                 />
-                <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                <div className="relative z-0 flex h-72 w-full flex-col items-center justify-center pb-6 pt-5">
                   <BsCloudUpload className="text-5xl" />
                   <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                     <span className="font-semibold">Click to upload</span> or
@@ -233,23 +288,18 @@ const AddBook = () => {
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     PNG, JPG (MAX. 2MB)
                   </p>
+                  {/* image preview */}
+                  {files.length > 0 && (
+                    <img
+                      src={files[0].preview}
+                      alt="preview"
+                      className="absolute inset-0 -z-[1] h-full w-full rounded-md border object-cover opacity-30"
+                    />
+                  )}
                 </div>
               </label>
             </div>
           </div>
-
-          {/* cover image preview */}
-          {files.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Cover Image Preview</p>
-
-              <img
-                src={files[0].preview}
-                alt="preview"
-                className="h-72 w-full rounded-md border object-cover"
-              />
-            </div>
-          )}
 
           <div className="flex justify-end">
             <Button type="submit" className="mt-2" size={"xs"}>

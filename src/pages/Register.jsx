@@ -54,7 +54,6 @@ const Register = () => {
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
         toast.update(id, {
           ...tostDefault,
           render: "Something went wrong",
