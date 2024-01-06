@@ -1,18 +1,14 @@
 import React from 'react'
-import { Card } from 'flowbite-react';
+//import { Card } from 'flowbite-react';
 
 function BookCard() {
-  return (
-    <div>
-      <Card className="max-w-auto" imgSrc="src\assets\Harry-Potter-and-the-Prisoner-of-Azkaban.jpg" horizontal>
-      <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-      Harry Potter and the Prisoner of Azkaban (by J.K. Rowling)
-      </h5>
-      <p className="font-normal text-gray-700 dark:text-gray-400">      
-      Sirius Black, a notorious prisoner in Azkaban for twelve years, escapes, leaving clues that link him to Harry Potter's past and a potential threat to Hogwarts.
-      </p>
-    </Card>
-    </div>
+  return (  
+  <div className="flex flex-raw p-6 mx-auto max-w-sm text-center text-gray-900 bg-Black rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+    {/* Book image */}
+      <figure className="relative max-w-sm transition-all duration-300 cursor-pointer filter grayscale-0 hover:grayscale">
+        <img className="rounded-lg" src="src\assets\Harry-Potter-and-the-Prisoner-of-Azkaban.jpg" alt="image description"></img>
+      </figure>
+  </div>    
   )
 }
 
