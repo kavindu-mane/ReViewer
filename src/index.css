@@ -12,6 +12,7 @@
   }
 
   .inputs input,
+  .inputs textarea,
   .inputs select {
     @apply border-gray-400/80 dark:border dark:border-slate-500 dark:bg-slate-700/90;
   }

@@ -16,9 +16,9 @@ const Profile = () => {
           <div className="mb-10 flex w-full flex-col md:flex-row md:space-x-10 lg:space-x-20 xl:max-w-7xl xl:space-x-32">
             {/* left side */}
             <div className="w-full">
-              <div className="flex-1 rounded-lg ">
+              <div className="flex-1 rounded-lg">
                 {/*avatar start*/}
-                <div className="items-left flex flex-col ">
+                <div className="items-left flex flex-col">
                   <img
                     src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
                     className="w-40 rounded-full border-4 border-white"
@@ -195,7 +195,6 @@ const Profile = () => {
                     <div
                       key={index}
                       className="mb-5 flex space-x-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
-                      horizontal
                     >
                       {/* left side */}
                       <img
@@ -235,7 +234,10 @@ const Profile = () => {
                 {/* review -start*/}
                 {Array.from({ length: 3 }).map((_, index) => {
                   return (
-                    <div className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600">
+                    <div
+                      key={index}
+                      className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
+                    >
                       <p className="mb-1 text-lg">Noteworthy Technology</p>
                       <Rating size="sm" className="mb-5">
                         <Rating.Star />
