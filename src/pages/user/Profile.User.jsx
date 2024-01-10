@@ -1,10 +1,44 @@
 import { TextInput, Label, Button, Rating, Datepicker } from "flowbite-react";
-import React, { lazy, useState } from "react";
+import React, { lazy, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useAxios from "../../hooks/useAxios";
+import LoadingAnimation from "../../components/LoadingAnimation";
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
 
 const Profile = () => {
   const [error, setError] = useState({});
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const axiosPrivateInstance = useAxios();
+
+  // user data load
+  useEffect(() => {
+    axiosPrivateInstance
+      .get("/account/")
+      .then((response) => {
+        if (response?.status === 200) {
+          if (response?.data !== null) {
+            setUser(response?.data);
+            console.log(response?.data);
+          } else {
+            // navigate("/login");
+            
+            /**  
+             * unconnect these navigate("/login") lines after completing the backend and testing 
+             * the both frontend and backend together.
+             **/
+          }
+        } else {
+          // navigate("/login");
+        }
+      })
+      .catch((error) => {
+        // navigate("/login");
+      });
+  }, [user]);
+
+  if (user === null) return <LoadingAnimation />;
 
   return (
     <React.Fragment>
