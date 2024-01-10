@@ -18,7 +18,7 @@ const WishList = lazy(() => import("../../components/user/WishList"));
 const Books = () => {
   const { isbn } = useParams();
   const [book, setBook] = useState(null);
-  
+
   // load book data
   useEffect(() => {
     axios
@@ -38,10 +38,11 @@ const Books = () => {
       });
   }, [isbn, book]);
 
+  if (book === null) return <LoadingAnimation />;
+  if (book === 404) return <Error />;
+
   return (
     <React.Fragment>
-      {book === 404 && <Error />}
-      {book === null && <LoadingAnimation />}
       {book !== null && book !== 404 && (
         <div className="relative flex min-h-screen flex-col items-center justify-between">
           {/* header */}
