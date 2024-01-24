@@ -1,8 +1,8 @@
 import { TextInput, Label, Button, Rating, Datepicker } from "flowbite-react";
 import React, { lazy, useState, useEffect } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import useAxios from "../../hooks/useAxios";
-import { useAuth } from "../../hooks/AuthContext";
+import LoadingAnimation from "../../components/LoadingAnimation";
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
 
@@ -14,51 +14,37 @@ const Profile = () => {
   });
 
   const [error, setError] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   const axiosPrivateInstance = useAxios();
-  const { user } = useAuth()
 
-  // Fetch user profile details when the component mounts
+  // user data load
   useEffect(() => {
-    setUserData(user)
+    axiosPrivateInstance
+      .get("/account/")
+      .then((response) => {
+        if (response?.status === 200) {
+          if (response?.data !== null) {
+            setUser(response?.data);
+            console.log(response?.data);
+          } else {
+            // navigate("/login");
+            
+            /**  
+             * unconnect these navigate("/login") lines after completing the backend and testing 
+             * the both frontend and backend together.
+             **/
+          }
+        } else {
+          // navigate("/login");
+        }
+      })
+      .catch((error) => {
+        // navigate("/login");
+      });
   }, [user]);
 
-
-  // Define handleInputChange function
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-//update name,email and birth_date
-  const handlePasswordChange = (field, value) => {
-    setPasswordData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-  };
-  const handleProfileSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosPrivateInstance.put("/profile_update", userData);
-      setSuccessMessage(response.data.details);
-    } catch (error) {
-      setError({ profile: error.response.data.details });
-    }
-  };
-  
-  const handleChangePasswordSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosPrivateInstance.put("/profile_password", passwordData);
-      setSuccessMessage(response.data.details);
-    } catch (error) {
-      setError({ password: error.response.data.details });
-    }
-  };
-
+  if (user === null) return <LoadingAnimation />;
 
   return (
     <React.Fragment>
@@ -70,9 +56,9 @@ const Profile = () => {
           <div className="mb-10 flex w-full flex-col md:flex-row md:space-x-10 lg:space-x-20 xl:max-w-7xl xl:space-x-32">
             {/* left side */}
             <div className="w-full">
-              <div className="flex-1 rounded-lg ">
+              <div className="flex-1 rounded-lg">
                 {/*avatar start*/}
-                <div className="items-left flex flex-col ">
+                <div className="items-left flex flex-col">
                   <img
                     src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
                     className="w-40 rounded-full border-4 border-white"
@@ -263,7 +249,6 @@ const Profile = () => {
                     <div
                       key={index}
                       className="mb-5 flex space-x-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
-                      horizontal
                     >
                       {/* left side */}
                       <img
@@ -303,7 +288,10 @@ const Profile = () => {
                 {/* review -start*/}
                 {Array.from({ length: 3 }).map((_, index) => {
                   return (
-                    <div className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600">
+                    <div
+                      key={index}
+                      className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
+                    >
                       <p className="mb-1 text-lg">Noteworthy Technology</p>
                       <Rating size="sm" className="mb-5">
                         <Rating.Star />

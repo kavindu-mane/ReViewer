@@ -27,11 +27,11 @@ const Dashboard = lazy(() => import("./components/admin/Dashboard.Admin"));
 const LinkArray = {
   "/login": <Login />,
   "/register": <Register />,
-  "/books": <Books />,
+  "/:isbn": <Books />,
   "/profile": <Profile />,
   "/privacy": <Privacy />,
   "/contact": <Contact />,
-  "/review": <Review />,
+  "/:isbn/review": <Review />,
   "/about": <About />,
   "/*": <Error />,
 };
@@ -50,7 +50,12 @@ function App() {
           <ToastContainer limit={1} />
           <Routes>
             <Route path="/" element={<Authentications />}>
-              <Route index exact element={<Home />} />
+              <Route
+                index
+                exact
+                element={<Home />}
+                loader={<LoadingAnimation />}
+              />
               {Object.keys(LinkArray).map((key) => {
                 return <Route key={key} path={key} element={LinkArray[key]} />;
               })}
