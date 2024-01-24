@@ -7,6 +7,12 @@ const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
 
 const Profile = () => {
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    birth_date: "",
+  });
+
   const [error, setError] = useState({});
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -59,7 +65,8 @@ const Profile = () => {
                   />
                   <div className="mt-5 flex items-center space-x-2">
                     <p className="font-Poppins text-2xl font-medium italic">
-                      Tharushi Vithanage
+                      {userData?.name || "Loading..."}
+
                     </p>
                   </div>
                 </div>
@@ -68,7 +75,7 @@ const Profile = () => {
                 {/* form area start*/}
                 <div className="mx-auto mt-5 w-full max-w-[750px]">
                   {/* basic details form */}
-                  <form onSubmit={() => {}}>
+                  <form onSubmit={() => { handleProfileSubmit }}>
                     {/*Name  : start  */}
                     <div>
                       <div className="mb-1 block">
@@ -76,10 +83,14 @@ const Profile = () => {
                       </div>
                       <TextInput
                         id="name"
+                        name="name"
                         className="inputs"
                         type="text"
                         placeholder="Tharushi Vithanage"
+                        value={userData?.name || ""}
+                        onChange={handleInputChange}
                         required
+
                         helperText={
                           <span className="text-red-500">{error?.name}</span>
                         }
@@ -96,7 +107,10 @@ const Profile = () => {
                         className="inputs"
                         type="email"
                         placeholder="name@gmail.com"
+                        value={userData?.email || ""}
+                        onChange={handleInputChange}
                         required
+                        name="email"
                         helperText={
                           <span className="text-red-500">{error?.email1}</span>
                         }
@@ -111,6 +125,8 @@ const Profile = () => {
                       <Datepicker
                         id="birth_date"
                         name="birth_date"
+                        value={userData?.birth_date || ''}
+                        onChange={handleInputChange}
                         className="inputs relative"
                         size={"xs"}
                         showClearButton={false}
@@ -123,9 +139,7 @@ const Profile = () => {
                           )
                         }
                         helperText={
-                          <span className="text-red-500">
-                            {error?.birth_date}
-                          </span>
+                          <span className="text-red-500">{error?.birth_date}</span>
                         }
                       />
                     </div>
@@ -140,7 +154,7 @@ const Profile = () => {
                   </form>
 
                   {/* password reset form */}
-                  <form onSubmit={() => {}}>
+                  <form onSubmit={() => { handleChangePasswordSubmit }}>
                     {/*Current Password:start*/}
                     <div>
                       <div className="mb-1 mt-5 block">
@@ -154,6 +168,7 @@ const Profile = () => {
                         type="password"
                         placeholder="********"
                         required
+                        name="current_password"
                         className="inputs"
                         helperText={
                           <span className="text-red-500">
@@ -173,7 +188,9 @@ const Profile = () => {
                         type="password"
                         placeholder="********"
                         required
+                        name="new_password"
                         className="inputs"
+                        value={userData?.new_password || ''}  // Add the nullish coalescing operator here
                         helperText={
                           <span className="text-red-500">
                             {error?.new_password}
@@ -195,7 +212,10 @@ const Profile = () => {
                         type="password"
                         placeholder="********"
                         required
+                        name="confirm_password"
                         className="inputs"
+                        defaultValue={userData?.confirm_password || ''} // Use defaultValue
+                        onChange={(e) => handleInputChange('confirm_password', e.target.value)} // Add this line
                         helperText={
                           <span className="text-red-500">
                             {error?.confirm_password}
@@ -313,3 +333,13 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+
+
+
+
+
+
+
+
