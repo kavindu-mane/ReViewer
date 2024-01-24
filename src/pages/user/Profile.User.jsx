@@ -21,19 +21,43 @@ const Profile = () => {
   // Fetch user profile details when the component mounts
   useEffect(() => {
     setUserData(user)
-  }, []);
+  }, [user]);
 
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserData((prevUserData) => ({
-      ...prevUserData,
+  // Define handleInputChange function
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
+      ...prevData,
       [name]: value,
     }));
   };
+//update name,email and birth_date
+  const handlePasswordChange = (field, value) => {
+    setPasswordData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosPrivateInstance.put("/profile_update", userData);
+      setSuccessMessage(response.data.details);
+    } catch (error) {
+      setError({ profile: error.response.data.details });
+    }
+  };
   
-
-
+  const handleChangePasswordSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosPrivateInstance.put("/profile_password", passwordData);
+      setSuccessMessage(response.data.details);
+    } catch (error) {
+      setError({ password: error.response.data.details });
+    }
+  };
 
 
   return (
@@ -55,7 +79,8 @@ const Profile = () => {
                   />
                   <div className="mt-5 flex items-center space-x-2">
                     <p className="font-Poppins text-2xl font-medium italic">
-                      {userData.name}
+                      {userData?.name || "Loading..."}
+
                     </p>
                   </div>
                 </div>
@@ -64,21 +89,22 @@ const Profile = () => {
                 {/* form area start*/}
                 <div className="mx-auto mt-5 w-full max-w-[750px]">
                   {/* basic details form */}
-                  <form onSubmit={handleProfileUpdate}>
+                  <form onSubmit={() => { handleProfileSubmit }}>
                     {/*Name  : start  */}
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="name" value="name" />
+                        <Label htmlFor="name" value="Name" />
                       </div>
                       <TextInput
                         id="name"
+                        name="name"
                         className="inputs"
                         type="text"
                         placeholder="Tharushi Vithanage"
-                        value={userData.name}
+                        value={userData?.name || ""}
                         onChange={handleInputChange}
                         required
-                        name="name"
+
                         helperText={
                           <span className="text-red-500">{error?.name}</span>
                         }
@@ -88,14 +114,14 @@ const Profile = () => {
                     {/*email start */}
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="email" value="email" />
+                        <Label htmlFor="email1" value="Email" />
                       </div>
                       <TextInput
-                        id="email"
+                        id="email1"
                         className="inputs"
                         type="email"
                         placeholder="name@gmail.com"
-                        value={userData.email}
+                        value={userData?.email || ""}
                         onChange={handleInputChange}
                         required
                         name="email"
@@ -113,7 +139,7 @@ const Profile = () => {
                       <Datepicker
                         id="birth_date"
                         name="birth_date"
-                        value={userData.birth_date}
+                        value={userData?.birth_date || ''}
                         onChange={handleInputChange}
                         className="inputs relative"
                         size={"xs"}
@@ -127,16 +153,14 @@ const Profile = () => {
                           )
                         }
                         helperText={
-                          <span className="text-red-500">
-                            {error?.birth_date}
-                          </span>
+                          <span className="text-red-500">{error?.birth_date}</span>
                         }
                       />
                     </div>
                     {/*birthday end */}
                     {/*button start */}
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-32 rounded-[5px]" type="submit" >
+                      <Button size={"sm"} className="w-32 rounded-[5px]">
                         Save
                       </Button>
                     </div>
@@ -144,10 +168,7 @@ const Profile = () => {
                   </form>
 
                   {/* password reset form */}
-                  <form onSubmit={(event) => {
-                    event.preventDefault();
-                    handleProfileUpdate(event);
-                  }}>
+                  <form onSubmit={() => { handleChangePasswordSubmit }}>
                     {/*Current Password:start*/}
                     <div>
                       <div className="mb-1 mt-5 block">
@@ -174,7 +195,7 @@ const Profile = () => {
                     {/*New Password:start*/}
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="new_password" value="new_Password" />
+                        <Label htmlFor="new_password" value="New Password" />
                       </div>
                       <TextInput
                         id="new_password"
@@ -183,8 +204,7 @@ const Profile = () => {
                         required
                         name="new_password"
                         className="inputs"
-                        onChange={handleInputChange}
-                        value={userData.new_password}
+                        value={userData?.new_password || ''}  // Add the nullish coalescing operator here
                         helperText={
                           <span className="text-red-500">
                             {error?.new_password}
@@ -198,7 +218,7 @@ const Profile = () => {
                       <div className="mb-1 block">
                         <Label
                           htmlFor="confirm_password"
-                          value="confirm_password"
+                          value="Conform Password"
                         />
                       </div>
                       <TextInput
@@ -208,8 +228,8 @@ const Profile = () => {
                         required
                         name="confirm_password"
                         className="inputs"
-                        onChange={handleInputChange}
-                        value={userData.confirm_password}
+                        defaultValue={userData?.confirm_password || ''} // Use defaultValue
+                        onChange={(e) => handleInputChange('confirm_password', e.target.value)} // Add this line
                         helperText={
                           <span className="text-red-500">
                             {error?.confirm_password}
@@ -219,7 +239,7 @@ const Profile = () => {
                     </div>
                     {/*Conform Password:end*/}
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-44 rounded-[5px]" type="submit">
+                      <Button size={"sm"} className="w-44 rounded-[5px]">
                         Change Password
                       </Button>
                     </div>
@@ -243,6 +263,7 @@ const Profile = () => {
                     <div
                       key={index}
                       className="mb-5 flex space-x-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
+                      horizontal
                     >
                       {/* left side */}
                       <img
@@ -282,7 +303,7 @@ const Profile = () => {
                 {/* review -start*/}
                 {Array.from({ length: 3 }).map((_, index) => {
                   return (
-                    <div className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600" key={index}>
+                    <div className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600">
                       <p className="mb-1 text-lg">Noteworthy Technology</p>
                       <Rating size="sm" className="mb-5">
                         <Rating.Star />
@@ -324,5 +345,13 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+
+
+
+
+
+
 
 
