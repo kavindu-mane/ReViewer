@@ -12,7 +12,7 @@
   "dependencies": {
     "@studio-freight/lenis": "^1.0.33",
     "apexcharts": "^3.44.2",
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "dayjs": "^1.11.10",
     "flowbite": "^2.2.0",
     "flowbite-react": "^0.7.0",

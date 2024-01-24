@@ -1,10 +1,40 @@
 import { TextInput, Label, Button, Rating, Datepicker } from "flowbite-react";
-import React, { lazy, useState } from "react";
+import React, { lazy, useState, useEffect } from "react";
+import axios from "axios";
+import useAxios from "../../hooks/useAxios";
+import { useAuth } from "../../hooks/AuthContext";
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
 
 const Profile = () => {
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    birth_date: "",
+  });
+
   const [error, setError] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const axiosPrivateInstance = useAxios();
+  const { user } = useAuth()
+
+  // Fetch user profile details when the component mounts
+  useEffect(() => {
+    setUserData(user)
+  }, []);
+
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      [name]: value,
+    }));
+  };
+  
+
+
+
 
   return (
     <React.Fragment>
@@ -25,7 +55,7 @@ const Profile = () => {
                   />
                   <div className="mt-5 flex items-center space-x-2">
                     <p className="font-Poppins text-2xl font-medium italic">
-                      Tharushi Vithanage
+                      {userData.name}
                     </p>
                   </div>
                 </div>
@@ -34,18 +64,21 @@ const Profile = () => {
                 {/* form area start*/}
                 <div className="mx-auto mt-5 w-full max-w-[750px]">
                   {/* basic details form */}
-                  <form onSubmit={() => {}}>
+                  <form onSubmit={handleProfileUpdate}>
                     {/*Name  : start  */}
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="name" value="Name" />
+                        <Label htmlFor="name" value="name" />
                       </div>
                       <TextInput
                         id="name"
                         className="inputs"
                         type="text"
                         placeholder="Tharushi Vithanage"
+                        value={userData.name}
+                        onChange={handleInputChange}
                         required
+                        name="name"
                         helperText={
                           <span className="text-red-500">{error?.name}</span>
                         }
@@ -55,14 +88,17 @@ const Profile = () => {
                     {/*email start */}
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="email1" value="Email" />
+                        <Label htmlFor="email" value="email" />
                       </div>
                       <TextInput
-                        id="email1"
+                        id="email"
                         className="inputs"
                         type="email"
                         placeholder="name@gmail.com"
+                        value={userData.email}
+                        onChange={handleInputChange}
                         required
+                        name="email"
                         helperText={
                           <span className="text-red-500">{error?.email1}</span>
                         }
@@ -77,6 +113,8 @@ const Profile = () => {
                       <Datepicker
                         id="birth_date"
                         name="birth_date"
+                        value={userData.birth_date}
+                        onChange={handleInputChange}
                         className="inputs relative"
                         size={"xs"}
                         showClearButton={false}
@@ -98,7 +136,7 @@ const Profile = () => {
                     {/*birthday end */}
                     {/*button start */}
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-32 rounded-[5px]">
+                      <Button size={"sm"} className="w-32 rounded-[5px]" type="submit" >
                         Save
                       </Button>
                     </div>
@@ -106,7 +144,10 @@ const Profile = () => {
                   </form>
 
                   {/* password reset form */}
-                  <form onSubmit={() => {}}>
+                  <form onSubmit={(event) => {
+                    event.preventDefault();
+                    handleProfileUpdate(event);
+                  }}>
                     {/*Current Password:start*/}
                     <div>
                       <div className="mb-1 mt-5 block">
@@ -120,6 +161,7 @@ const Profile = () => {
                         type="password"
                         placeholder="********"
                         required
+                        name="current_password"
                         className="inputs"
                         helperText={
                           <span className="text-red-500">
@@ -132,14 +174,17 @@ const Profile = () => {
                     {/*New Password:start*/}
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="new_password" value="New Password" />
+                        <Label htmlFor="new_password" value="new_Password" />
                       </div>
                       <TextInput
                         id="new_password"
                         type="password"
                         placeholder="********"
                         required
+                        name="new_password"
                         className="inputs"
+                        onChange={handleInputChange}
+                        value={userData.new_password}
                         helperText={
                           <span className="text-red-500">
                             {error?.new_password}
@@ -153,7 +198,7 @@ const Profile = () => {
                       <div className="mb-1 block">
                         <Label
                           htmlFor="confirm_password"
-                          value="Conform Password"
+                          value="confirm_password"
                         />
                       </div>
                       <TextInput
@@ -161,7 +206,10 @@ const Profile = () => {
                         type="password"
                         placeholder="********"
                         required
+                        name="confirm_password"
                         className="inputs"
+                        onChange={handleInputChange}
+                        value={userData.confirm_password}
                         helperText={
                           <span className="text-red-500">
                             {error?.confirm_password}
@@ -171,7 +219,7 @@ const Profile = () => {
                     </div>
                     {/*Conform Password:end*/}
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-44 rounded-[5px]">
+                      <Button size={"sm"} className="w-44 rounded-[5px]" type="submit">
                         Change Password
                       </Button>
                     </div>
@@ -195,7 +243,6 @@ const Profile = () => {
                     <div
                       key={index}
                       className="mb-5 flex space-x-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
-                      horizontal
                     >
                       {/* left side */}
                       <img
@@ -235,7 +282,7 @@ const Profile = () => {
                 {/* review -start*/}
                 {Array.from({ length: 3 }).map((_, index) => {
                   return (
-                    <div className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600">
+                    <div className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600" key={index}>
                       <p className="mb-1 text-lg">Noteworthy Technology</p>
                       <Rating size="sm" className="mb-5">
                         <Rating.Star />
@@ -277,3 +324,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
