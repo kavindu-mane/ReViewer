@@ -36,7 +36,7 @@ const Profile = () => {
       .put(`/user/update/${type}/`, userData)
       .then(async (response) => {
         if (response.data?.details === undefined) {
-          const { data } = await axiosPrivateInstance.get("/user");
+          const { data } = await axiosPrivateInstance.get("/user/");
           setUserValue(data);
           toast.success("Update Successful", tostDefault);
         } else {
