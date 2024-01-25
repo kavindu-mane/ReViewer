@@ -39,6 +39,7 @@ const NavBar = () => {
 
   // nav link object
   const pagesWithPath = {
+    "/": "Home",
     "/about": "About",
     "/contact": "Contact",
     "/privacy": "Privacy",
@@ -88,7 +89,7 @@ const NavBar = () => {
 
           {/* search icon for small screens */}
           <IoMdSearch
-            className="block h-9 w-9 me-3 cursor-pointer rounded-full p-2 text-white hover:bg-slate-600 lg:hidden"
+            className="me-3 block h-9 w-9 cursor-pointer rounded-full p-2 text-white hover:bg-slate-600 lg:hidden"
             onClick={() => setOpenModal(true)}
           />
 
