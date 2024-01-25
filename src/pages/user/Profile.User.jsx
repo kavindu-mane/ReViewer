@@ -32,7 +32,7 @@ const Profile = () => {
       [name]: value,
     }));
   };
-//update name,email and birth_date
+  //update name,email and birth_date
   const handlePasswordChange = (field, value) => {
     setPasswordData((prevData) => ({
       ...prevData,
@@ -48,7 +48,7 @@ const Profile = () => {
       setError({ profile: error.response.data.details });
     }
   };
-  
+  //PASSWORD CHANGES
   const handleChangePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
