@@ -26,13 +26,13 @@ const Login = () => {
     setLoading(true);
     const formData = new FormData(e.target);
     await axios
-      .post("/login", formData)
+      .post("/login/", formData)
       .then((response) => {
         if (response.data?.details === undefined) {
           localStorage.setItem("token", response?.data?.access);
           localStorage.setItem("csrf", response?.data?.csrf);
           if (response?.data?.status) {
-            const { data } = axiosPrivateInstance.get("/user");
+            const { data } = axiosPrivateInstance.get("/user/");
             setUserValue(data);
             navigate("/admin", { replace: true });
           } else navigate("/", { replace: true });

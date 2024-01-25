@@ -14,7 +14,7 @@ export default function AuthMiddleware({ isAdmin = false }) {
   useEffect(() => {
     if (isAdmin) {
       axiosPrivateInstance
-        .get("/whoiam")
+        .get("/whoiam/")
         .then((response) => {
           if (response.status === 200) {
             if (!response.data?.details) {

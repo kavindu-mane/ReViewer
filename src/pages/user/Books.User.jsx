@@ -22,7 +22,7 @@ const Books = () => {
   // load book data
   useEffect(() => {
     axios
-      .get(`/books/${isbn}`)
+      .get(`/books/${isbn}/`)
       .then((response) => {
         if (response?.status === 200) {
           if (response?.data !== null) {

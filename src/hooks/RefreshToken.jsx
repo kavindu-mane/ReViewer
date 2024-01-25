@@ -3,7 +3,7 @@ import axios from "axios";
 const RefreshToken = async () => {
   let access = {};
   await axios
-    .post("login/refresh")
+    .post("/login/refresh/")
     .then((response) => {
       if (response.status === 200) {
         localStorage.token = response?.data?.access;

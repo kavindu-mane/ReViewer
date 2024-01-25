@@ -15,9 +15,7 @@ const Search = ({ openModal, setOpenModal }) => {
     setBooks();
     if (keyword !== "") {
       await axios
-        .get("/search", {
-          search: keyword,
-        })
+        .get("/search/" + keyword)
         .then((response) => {
           if (response?.status === 200) {
             setBooks(response?.data?.users);
