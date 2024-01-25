@@ -121,7 +121,12 @@ const Profile = () => {
                         id="birth_date"
                         name="birth_date"
                         value={userData?.birth_date || ""}
-                        onChange={handleInputChange}
+                        onSelectedDateChanged={(date) =>
+                          setUserData({
+                            ...userData,
+                            birth_date: `${date.toLocaleString("default", { month: "long" })} ${date.getDate()}, ${date.getFullYear()}`,
+                          })
+                        }
                         className="inputs relative"
                         size={"xs"}
                         showClearButton={false}
