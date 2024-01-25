@@ -1,73 +1,54 @@
 import { TextInput, Label, Button, Rating, Datepicker } from "flowbite-react";
-import React, { lazy, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { lazy, useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
-import LoadingAnimation from "../../components/LoadingAnimation";
+import { useAuth } from "../../hooks/AuthContext";
+import { toast } from "react-toastify";
+import tostDefault from "../../data/tostDefault";
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
 
 const Profile = () => {
+  const { user, setUserValue } = useAuth();
   const [userData, setUserData] = useState({
     name: "",
     email: "",
     birth_date: "",
+    avatar: "",
   });
 
   const [error, setError] = useState({});
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState({
+    basic: false,
+    email: false,
+    password: false,
+  });
   const axiosPrivateInstance = useAxios();
 
-  // user data load
-  useEffect(() => {
-    axiosPrivateInstance
-      .get("/account/")
+  const handleInputChange = (e) => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
+  const handleUpdate = async (e, type) => {
+    e.preventDefault();
+    setError(null);
+    setLoading({ ...loading, [type]: true });
+    await axiosPrivateInstance
+      .put(`/user/update/${type}`, userData)
       .then((response) => {
-        if (response?.status === 200) {
-          if (response?.data !== null) {
-            setUser(response?.data);
-            console.log(response?.data);
-          } else {
-            // navigate("/login");
-            
-            /**  
-             * unconnect these navigate("/login") lines after completing the backend and testing 
-             * the both frontend and backend together.
-             **/
-          }
+        if (response.data?.details === undefined) {
+          setUserValue(data);
+          const { data } = axiosPrivateInstance.get("/user");
+          toast.success("Update Successful", tostDefault);
         } else {
-          // navigate("/login");
+          setError(response.data?.details);
         }
       })
       .catch((error) => {
-        // navigate("/login");
+        toast.error("Something went wrong", tostDefault);
+      })
+      .finally(() => {
+        setLoading({ ...loading, [type]: false });
       });
-  }, [user]);
-
-
-  // Define handleInputChange function
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-//update name,email and birth_date
-  const handlePasswordChange = (field, value) => {
-    setPasswordData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-  };
-  const handleProfileSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosPrivateInstance.put("/profile_update", userData);
-      setSuccessMessage(response.data.details);
-    } catch (error) {
-      setError({ profile: error.response.data.details });
-    }
   };
   
   const handleChangePasswordSubmit = async (e) => {
@@ -79,6 +60,10 @@ const Profile = () => {
       setError({ password: error.response.data.details });
     }
   };
+
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
 
 
   return (
@@ -95,13 +80,15 @@ const Profile = () => {
                 {/*avatar start*/}
                 <div className="items-left flex flex-col">
                   <img
-                    src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
+                    src={
+                      import.meta.env.VITE_BASE_URL?.slice(0, -4) +
+                      userData?.avatar
+                    }
                     className="w-40 rounded-full border-4 border-white"
                   />
                   <div className="mt-5 flex items-center space-x-2">
                     <p className="font-Poppins text-2xl font-medium italic">
                       {userData?.name || "Loading..."}
-
                     </p>
                   </div>
                 </div>
@@ -110,7 +97,11 @@ const Profile = () => {
                 {/* form area start*/}
                 <div className="mx-auto mt-5 w-full max-w-[750px]">
                   {/* basic details form */}
-                  <form onSubmit={() => { handleProfileSubmit }}>
+                  <form
+                    onSubmit={(e) => {
+                      handleUpdate(e, "basic");
+                    }}
+                  >
                     {/*Name  : start  */}
                     <div>
                       <div className="mb-1 block">
@@ -125,14 +116,56 @@ const Profile = () => {
                         value={userData?.name || ""}
                         onChange={handleInputChange}
                         required
-
                         helperText={
                           <span className="text-red-500">{error?.name}</span>
                         }
                       />
                     </div>
                     {/* Name : end */}
-                    {/*email start */}
+                    {/*birthday start */}
+                    <div className="relative">
+                      <div className="mb-1 block">
+                        <Label htmlFor="birth_date" value="Birthday" />
+                      </div>
+                      <Datepicker
+                        id="birth_date"
+                        name="birth_date"
+                        value={userData?.birth_date || ""}
+                        onChange={handleInputChange}
+                        className="inputs relative"
+                        size={"xs"}
+                        showClearButton={false}
+                        showTodayButton={false}
+                        maxDate={
+                          new Date(
+                            new Date().getFullYear(),
+                            new Date().getMonth(),
+                            new Date().getDate(),
+                          )
+                        }
+                        helperText={
+                          <span className="text-red-500">
+                            {error?.birth_date}
+                          </span>
+                        }
+                      />
+                    </div>
+                    {/*birthday end */}
+                    {/*button start */}
+                    <div className="mt-5 flex flex-wrap justify-end gap-2">
+                      <Button size={"sm"} className="w-32 rounded-[5px]">
+                        Save
+                      </Button>
+                    </div>
+                    {/*button end */}
+                  </form>
+
+                  {/*email form */}
+                  <form
+                    onSubmit={(e) => {
+                      handleUpdate(e, "email");
+                    }}
+                  >
                     <div>
                       <div className="mb-1 block">
                         <Label htmlFor="email1" value="Email" />
@@ -151,45 +184,20 @@ const Profile = () => {
                         }
                       />
                     </div>
-                    {/*email end */}
-                    {/*birthday start */}
-                    <div className="relative">
-                      <div className="mb-1 block">
-                        <Label htmlFor="birth_date" value="Birthday" />
-                      </div>
-                      <Datepicker
-                        id="birth_date"
-                        name="birth_date"
-                        value={userData?.birth_date || ''}
-                        onChange={handleInputChange}
-                        className="inputs relative"
-                        size={"xs"}
-                        showClearButton={false}
-                        showTodayButton={false}
-                        maxDate={
-                          new Date(
-                            new Date().getFullYear(),
-                            new Date().getMonth(),
-                            new Date().getDate(),
-                          )
-                        }
-                        helperText={
-                          <span className="text-red-500">{error?.birth_date}</span>
-                        }
-                      />
-                    </div>
-                    {/*birthday end */}
-                    {/*button start */}
+
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
                       <Button size={"sm"} className="w-32 rounded-[5px]">
-                        Save
+                        Change Email
                       </Button>
                     </div>
-                    {/*button end */}
                   </form>
 
-                  {/* password reset form */}
-                  <form onSubmit={() => { handleChangePasswordSubmit }}>
+                  {/* password change form */}
+                  <form
+                    onSubmit={(e) => {
+                      handleUpdate(e, "password");
+                    }}
+                  >
                     {/*Current Password:start*/}
                     <div>
                       <div className="mb-1 mt-5 block">
@@ -225,7 +233,6 @@ const Profile = () => {
                         required
                         name="new_password"
                         className="inputs"
-                        value={userData?.new_password || ''}  // Add the nullish coalescing operator here
                         helperText={
                           <span className="text-red-500">
                             {error?.new_password}
@@ -249,8 +256,9 @@ const Profile = () => {
                         required
                         name="confirm_password"
                         className="inputs"
-                        defaultValue={userData?.confirm_password || ''} // Use defaultValue
-                        onChange={(e) => handleInputChange('confirm_password', e.target.value)} // Add this line
+                        onChange={(e) =>
+                          handleInputChange("confirm_password", e.target.value)
+                        } // Add this line
                         helperText={
                           <span className="text-red-500">
                             {error?.confirm_password}
@@ -368,13 +376,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-
-
-
-
-
-
-
-
-

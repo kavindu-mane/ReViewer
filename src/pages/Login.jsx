@@ -25,18 +25,10 @@ const Login = () => {
     setError(null);
     setLoading(true);
     const formData = new FormData(e.target);
-    const id = toast.loading("Please wait...", tostDefault);
     await axios
       .post("/login", formData)
       .then((response) => {
         if (response.data?.details === undefined) {
-          toast.update(id, {
-            ...tostDefault,
-            render: "Login successful",
-            type: "success",
-            isLoading: false,
-            closeButton: true,
-          });
           localStorage.setItem("token", response?.data?.access);
           localStorage.setItem("csrf", response?.data?.csrf);
           if (response?.data?.status) {
@@ -44,22 +36,14 @@ const Login = () => {
             setUserValue(data);
             navigate("/admin", { replace: true });
           } else navigate("/", { replace: true });
-          setLoading(false);
         } else {
-          toast.dismiss(id);
           setError(response.data?.details);
         }
       })
       .catch((error) => {
-        setLoading(false);
-        toast.update(id, {
-          ...tostDefault,
-          render: "Something went wrong",
-          type: "error",
-          isLoading: false,
-          closeButton: true,
-        });
-      });
+        toast.error("Something went wrong", tostDefault);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (

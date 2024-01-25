@@ -1,5 +1,6 @@
 import { Button, Modal, Rating, Label, Textarea } from "flowbite-react";
 import { useState } from "react";
+import { BsPlus } from "react-icons/bs";
 
 function AddReview() {
   const [openModal, setOpenModal] = useState(false);
@@ -20,10 +21,10 @@ function AddReview() {
     <>
       <Button
         size={"sm"}
-        className="rounded-full"
+        className="rounded-full dark:bg-sky-700"
         onClick={() => setOpenModal(true)}
       >
-        Add Review
+        <BsPlus className="h-6 w-6" /> Add Review
       </Button>
 
       <Modal

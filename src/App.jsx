@@ -31,7 +31,7 @@ const LinkArray = {
   "/profile": <Profile />,
   "/privacy": <Privacy />,
   "/contact": <Contact />,
-  "/:isbn/review": <Review />,
+  "/review": <Review />,
   "/about": <About />,
   "/*": <Error />,
 };

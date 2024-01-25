@@ -31,37 +31,23 @@ const Register = () => {
     setError({});
     setLoading(true);
     const formData = new FormData(e.target);
-    const id = toast.loading("Please wait...", tostDefault);
     await axios
       .post("/register", formData)
       .then((response) => {
         setLoading(false);
         if (response.status === 200) {
           if (response.data?.details === "success") {
-            toast.update(id, {
-              ...tostDefault,
-              render: "Registration successful",
-              type: "success",
-              isLoading: false,
-              closeButton: true,
-            });
+            toast.success("Registration successful", tostDefault);
             navigate("/login", { replace: true });
           } else {
-            toast.dismiss(id);
             setError(response.data);
           }
         }
       })
       .catch((error) => {
-        setLoading(false);
-        toast.update(id, {
-          ...tostDefault,
-          render: "Something went wrong",
-          type: "error",
-          isLoading: false,
-          closeButton: true,
-        });
-      });
+        toast.success("Something went wrong", tostDefault);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
