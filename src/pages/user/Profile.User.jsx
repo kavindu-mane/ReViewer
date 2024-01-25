@@ -13,7 +13,7 @@ const Profile = () => {
     name: "",
     email: "",
     birth_date: "",
-    avatar: "",
+    avatar: "/media/users/default_user.svg",
   });
 
   const [error, setError] = useState({});
@@ -34,10 +34,10 @@ const Profile = () => {
     setLoading({ ...loading, [type]: true });
     await axiosPrivateInstance
       .put(`/user/update/${type}`, userData)
-      .then((response) => {
+      .then(async (response) => {
         if (response.data?.details === undefined) {
+          const { data } = await axiosPrivateInstance.get("/user");
           setUserValue(data);
-          const { data } = axiosPrivateInstance.get("/user");
           toast.success("Update Successful", tostDefault);
         } else {
           setError(response.data?.details);
@@ -45,6 +45,7 @@ const Profile = () => {
       })
       .catch((error) => {
         toast.error("Something went wrong", tostDefault);
+        console.log(error);
       })
       .finally(() => {
         setLoading({ ...loading, [type]: false });
@@ -63,7 +64,7 @@ const Profile = () => {
 
   useEffect(() => {
     setUserData(user);
-  }, [user]);
+  }, []);
 
 
   return (
@@ -153,7 +154,11 @@ const Profile = () => {
                     {/*birthday end */}
                     {/*button start */}
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-32 rounded-[5px]">
+                      <Button
+                        type="submit"
+                        size={"sm"}
+                        className="w-32 rounded-[5px]"
+                      >
                         Save
                       </Button>
                     </div>
