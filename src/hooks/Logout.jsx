@@ -12,7 +12,7 @@ const Logout = ({ children, isNavigate = true }) => {
   const logout = async () => {
     const id = toast.loading("Please wait...", tostDefault);
     await axiosPrivateInstance
-      .post("logout")
+      .post("/logout/")
       .then((response) => {
         if (response.status === 200) {
           setUserValue(null);

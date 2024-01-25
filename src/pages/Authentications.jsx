@@ -16,7 +16,7 @@ const Authentications = () => {
     async function verifyUser() {
       try {
         if ("token" in localStorage) {
-          const { data } = await axiosPrivateInstance.get("/user");
+          const { data } = await axiosPrivateInstance.get("/user/");
           setUserValue(data);
         }
       } catch (error) {

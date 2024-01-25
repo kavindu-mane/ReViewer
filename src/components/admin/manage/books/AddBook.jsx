@@ -45,7 +45,7 @@ const AddBook = () => {
     const id = toast.loading("Please wait...", tostDefault);
 
     await axiosPrivateInstance
-      .post("/admin/books/add", formData, {
+      .post("/admin/books/add/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

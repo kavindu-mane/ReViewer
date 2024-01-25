@@ -69,7 +69,7 @@ const UserTable = () => {
       if (result.isConfirmed) {
         const id = toast.loading("Please wait...", tostDefault);
         await axiosPrivateInstance
-          .post("/admin/users/update", { status: status, email: email })
+          .post("/admin/users/update/", { status: status, email: email })
           .then((response) => {
             if (response?.status === 200) {
               toast.update(id, {

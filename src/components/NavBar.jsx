@@ -1,4 +1,4 @@
-import React, { Link, lazy, useRef, useState, useEffect } from "react";
+import React, { lazy, useRef, useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { RiMenu3Fill } from "react-icons/ri";
@@ -116,10 +116,8 @@ const NavBar = () => {
                   {user?.email}
                 </span>
               </Dropdown.Header>
-              <Dropdown.Item>
-
+              <Dropdown.Item href="/profile">
                 <CgProfile className="me-2 h-5 w-5" /> Profile
-
               </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item>

@@ -33,7 +33,7 @@ const Profile = () => {
     setError(null);
     setLoading({ ...loading, [type]: true });
     await axiosPrivateInstance
-      .put(`/user/update/${type}`, userData)
+      .put(`/user/update/${type}/`, userData)
       .then(async (response) => {
         if (response.data?.details === undefined) {
           const { data } = await axiosPrivateInstance.get("/user");
