@@ -28,7 +28,6 @@ const LinkArray = {
   "/login": <Login />,
   "/register": <Register />,
   "/:isbn": <Books />,
-  "/profile": <Profile />,
   "/privacy": <Privacy />,
   "/contact": <Contact />,
   "/review": <Review />,
@@ -59,6 +58,11 @@ function App() {
               {Object.keys(LinkArray).map((key) => {
                 return <Route key={key} path={key} element={LinkArray[key]} />;
               })}
+
+              {/* user profile routing */}
+              <Route path="/profile" element={<AuthMiddleware />}>
+                <Route index exact element={<Profile />} />
+              </Route>
 
               {/* admin dashboard routing */}
               <Route path="/admin" element={<AuthMiddleware isAdmin={true} />}>
