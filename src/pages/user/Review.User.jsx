@@ -30,10 +30,9 @@ const Review = () => {
             <div className="flex w-full justify-between">
               <AddReview />
               <Dropdown label="Sort by" inline>
-                <Dropdown.Item>Dashboard</Dropdown.Item>
-                <Dropdown.Item>Settings</Dropdown.Item>
-                <Dropdown.Item>Earnings</Dropdown.Item>
-                <Dropdown.Item>Sign out</Dropdown.Item>
+                <Dropdown.Item>Popular Reviews</Dropdown.Item>
+                <Dropdown.Item>Newest first</Dropdown.Item>
+                <Dropdown.Item>Oldest first</Dropdown.Item>               
               </Dropdown>
             </div>
             <div className="mb-10 flex w-full max-w-7xl flex-col space-y-10">
