@@ -34,40 +34,31 @@ const Profile = () => {
     setLoading({ ...loading, [type]: true });
     await axiosPrivateInstance
       .put(`/user/update/${type}/`, userData)
-
       .then(async (response) => {
-        console.log(response)
-        if (response.data?.details === undefined) {
-          const { data } = await axiosPrivateInstance.get("/user/");
-          setUserValue(data);
+        if (response?.data?.details === "success") {
+          if (type === "basic") {
+            const { data } = await axiosPrivateInstance.get("/user/");
+            setUserValue(data);
+          }else{
+            
+          }
+          
           toast.success("Update Successful", tostDefault);
         } else {
-          setError(response.data?.details);
+          setError(response.data);
         }
       })
       .catch((error) => {
         toast.error("Something went wrong", tostDefault);
-        console.log(error);
       })
       .finally(() => {
         setLoading({ ...loading, [type]: false });
       });
   };
 
-  const handleChangePasswordSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosPrivateInstance.put("/profile_password", passwordData);
-      setSuccessMessage(response.data.details);
-    } catch (error) {
-      setError({ password: error.response.data.details });
-    }
-  };
-
   useEffect(() => {
     setUserData(user);
   }, []);
-
 
   return (
     <React.Fragment>
@@ -198,7 +189,11 @@ const Profile = () => {
                     </div>
 
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-32 rounded-[5px] " type="submit">
+                      <Button
+                        size={"sm"}
+                        className="w-32 rounded-[5px] "
+                        type="submit"
+                      >
                         Change Email
                       </Button>
                     </div>
@@ -280,7 +275,11 @@ const Profile = () => {
                     </div>
                     {/*Conform Password:end*/}
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-44 rounded-[5px]" type="submit">
+                      <Button
+                        size={"sm"}
+                        className="w-44 rounded-[5px]"
+                        type="submit"
+                      >
                         Change Password
                       </Button>
                     </div>

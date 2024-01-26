@@ -32,7 +32,7 @@ const Register = () => {
     setLoading(true);
     const formData = new FormData(e.target);
     await axios
-      .post("/register", formData)
+      .post("/register/", formData)
       .then((response) => {
         setLoading(false);
         if (response.status === 200) {
