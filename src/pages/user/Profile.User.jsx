@@ -34,7 +34,9 @@ const Profile = () => {
     setLoading({ ...loading, [type]: true });
     await axiosPrivateInstance
       .put(`/user/update/${type}/`, userData)
+
       .then(async (response) => {
+        console.log(response)
         if (response.data?.details === undefined) {
           const { data } = await axiosPrivateInstance.get("/user/");
           setUserValue(data);
@@ -51,7 +53,7 @@ const Profile = () => {
         setLoading({ ...loading, [type]: false });
       });
   };
-  
+
   const handleChangePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -178,10 +180,10 @@ const Profile = () => {
                   >
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="email1" value="Email" />
+                        <Label htmlFor="email" value="email" />
                       </div>
                       <TextInput
-                        id="email1"
+                        id="email"
                         className="inputs"
                         type="email"
                         placeholder="name@gmail.com"
@@ -190,13 +192,13 @@ const Profile = () => {
                         required
                         name="email"
                         helperText={
-                          <span className="text-red-500">{error?.email1}</span>
+                          <span className="text-red-500">{error?.email}</span>
                         }
                       />
                     </div>
 
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-32 rounded-[5px]">
+                      <Button size={"sm"} className="w-32 rounded-[5px] " type="submit">
                         Change Email
                       </Button>
                     </div>
@@ -220,8 +222,9 @@ const Profile = () => {
                         id="current_password"
                         type="password"
                         placeholder="********"
+                        onChange={handleInputChange}
                         required
-                        name="current_password"
+                        name="password"
                         className="inputs"
                         helperText={
                           <span className="text-red-500">
@@ -240,6 +243,7 @@ const Profile = () => {
                         id="new_password"
                         type="password"
                         placeholder="********"
+                        onChange={handleInputChange}
                         required
                         name="new_password"
                         className="inputs"
@@ -263,12 +267,10 @@ const Profile = () => {
                         id="confirm_password"
                         type="password"
                         placeholder="********"
+                        onChange={handleInputChange}
                         required
-                        name="confirm_password"
+                        name="conf_password"
                         className="inputs"
-                        onChange={(e) =>
-                          handleInputChange("confirm_password", e.target.value)
-                        } // Add this line
                         helperText={
                           <span className="text-red-500">
                             {error?.confirm_password}
@@ -278,7 +280,7 @@ const Profile = () => {
                     </div>
                     {/*Conform Password:end*/}
                     <div className="mt-5 flex flex-wrap justify-end gap-2">
-                      <Button size={"sm"} className="w-44 rounded-[5px]">
+                      <Button size={"sm"} className="w-44 rounded-[5px]" type="submit">
                         Change Password
                       </Button>
                     </div>
