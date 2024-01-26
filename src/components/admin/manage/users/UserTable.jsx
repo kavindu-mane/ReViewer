@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import useAxios from "../../../../hooks/useAxios";
 import tostDefault from "../../../../data/tostDefault";
 import Swal from "sweetalert2";
+import { IoMdSearch } from "react-icons/io";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const UserTable = () => {
@@ -33,7 +34,7 @@ const UserTable = () => {
   const loadUsers = useCallback(async () => {
     setUsers();
     await axiosPrivateInstance
-      .post("/admin/users", {
+      .post("/admin/users/", {
         status: accountStatus,
         page: currentPage,
         search: searchKeyword,
@@ -119,6 +120,7 @@ const UserTable = () => {
               <TextInput
                 type="text"
                 sizing={"sm"}
+                icon={IoMdSearch}
                 placeholder="Search users by name or email"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
