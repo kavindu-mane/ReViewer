@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
+import axios from "axios";
 
-function WishList() {
+function WishList({ bookId }) {
   const [wishList, setWishList] = useState(true);
 
-  // need to add functionality to add to wishlist
-  const addToWishList = () => {
-    setWishList((prev) => !prev);
+ 
+  const addToWishList = async () => {
+    try {
+      const response = await axios.post(
+        `http://api/wishlist/${bookId}/`
+      );
+      setWishList(response.data.is_in_wishlist);    
+      console.log("Wishlist status updated successfully");
+    } catch (error) {
+      console.error("Error updating wishlist status", error);  
+    }
   };
 
   return (
@@ -17,10 +26,7 @@ function WishList() {
 
       {/* Wishlist icon */}
       <span className="cursor-pointer">
-        <FaHeart
-          onClick={addToWishList}
-          className={wishList ? "text-red-500" : ""}
-        />
+        <FaHeart onClick={addToWishList} className={wishList ? "text-red-500" : ""} />
       </span>
     </div>
   );
