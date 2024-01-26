@@ -2,6 +2,8 @@ import React from "react";
 import { Sidebar } from "flowbite-react";
 import { HiChartPie, HiUser } from "react-icons/hi";
 import { MdBook } from "react-icons/md";
+import { BiBookAdd } from "react-icons/bi";
+import { ImBooks } from "react-icons/im";
 import { IoLogOutOutline } from "react-icons/io5";
 import Logout from "../../hooks/Logout";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,9 +15,14 @@ const sidebarItems = [
     path: "/admin",
   },
   {
-    icon: MdBook,
-    text: "Manage Books",
+    icon: ImBooks,
+    text: "Search Books",
     path: "/admin/books",
+  },
+  {
+    icon: BiBookAdd,
+    text: "Add Book",
+    path: "/admin/books/add",
   },
   {
     icon: HiUser,

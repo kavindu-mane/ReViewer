@@ -283,10 +283,10 @@ const AddBook = () => {
                   <BsCloudUpload className="text-5xl" />
                   <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                     <span className="font-semibold">Click to upload</span> or
-                    drag and drop
+                    Drag and drop
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    PNG, JPG (MAX. 2MB)
+                    PNG, JPG, JPEG (MAX. 2MB)
                   </p>
                   {/* image preview */}
                   {files.length > 0 && (
