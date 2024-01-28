@@ -9,6 +9,8 @@ import "./custom_styles/animations.css";
 import AuthMiddleware from "./middleware/Auth";
 import CursorEffect from "./components/CursorEffect";
 import LoadingAnimation from "./components/LoadingAnimation";
+import AddBook from "./components/admin/manage/books/AddBook";
+import SearchBook from "./components/admin/manage/books/FindBook";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -87,7 +89,19 @@ function App() {
                   path="books"
                   element={
                     <AdminDashboard>
-                      <AdminBooks />
+                      <AdminBooks >
+                        <SearchBook />
+                      </AdminBooks>
+                    </AdminDashboard>
+                  }
+                />
+                <Route
+                  path="books/add"
+                  element={
+                    <AdminDashboard>
+                      <AdminBooks >
+                        <AddBook />
+                      </AdminBooks>
                     </AdminDashboard>
                   }
                 />
