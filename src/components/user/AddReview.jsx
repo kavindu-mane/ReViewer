@@ -2,7 +2,7 @@ import { Button, Modal, Rating, Label, Textarea } from "flowbite-react";
 import { useState } from "react";
 import { BsPlus } from "react-icons/bs";
 
-function AddReview() {
+function AddReview({isbn}) {
   const [openModal, setOpenModal] = useState(false);
   const [ratings, setRatings] = useState(1);
   const [review, setReview] = useState("");

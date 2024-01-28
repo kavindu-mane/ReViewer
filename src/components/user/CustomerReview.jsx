@@ -1,27 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Avatar, Rating } from "flowbite-react";
 
-function CustomerReview({ isbn }) {
-  const [reviews, setReviews] = useState([]);
-
-  useEffect(() => {
-    // Fetch customer reviews
-    const fetchReviews = async () => {
-      try {
-        const response = await axios.get(`http:/api/books/${isbn}/reviews/`);
-        setReviews(response.data);
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      }
-    };
-
-    fetchReviews();
-  }, [isbn]); // Re-fetch reviews when ISBN changes
+function CustomerReview({reviews}) {
 
   return (
     <div>
-      {reviews.map((review) => (
+      {reviews?.map((review) => (
         <div key={review.id}>
           <div className="mb-4 flex items-center">
             {/* User image */}

@@ -32,7 +32,7 @@ const LinkArray = {
   "/:isbn": <Books />,
   "/privacy": <Privacy />,
   "/contact": <Contact />,
-  "/review": <Review />,
+  "/:isbn/reviews": <Review />,
   "/about": <About />,
   "/*": <Error />,
 };
