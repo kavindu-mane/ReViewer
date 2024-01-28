@@ -1,8 +1,8 @@
-import { Zoom } from "react-toastify";
+import { Bounce } from "react-toastify";
 
 const tostDefault = {
-  transition: Zoom,
-  position: "top-center",
+  transition: Bounce,
+  position: "top-right",
   autoClose: 3000,
   hideProgressBar: true,
   closeOnClick: true,

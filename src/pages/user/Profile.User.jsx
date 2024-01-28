@@ -4,6 +4,7 @@ import useAxios from "../../hooks/useAxios";
 import { useAuth } from "../../hooks/AuthContext";
 import { toast } from "react-toastify";
 import tostDefault from "../../data/tostDefault";
+import { useNavigate } from "react-router-dom";
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
 
@@ -15,7 +16,6 @@ const Profile = () => {
     birth_date: "",
     avatar: "/media/users/default_user.svg",
   });
-
   const [error, setError] = useState({});
   const [loading, setLoading] = useState({
     basic: false,
@@ -23,6 +23,7 @@ const Profile = () => {
     password: false,
   });
   const axiosPrivateInstance = useAxios();
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -31,18 +32,22 @@ const Profile = () => {
   const handleUpdate = async (e, type) => {
     e.preventDefault();
     setError(null);
+    const formData = new FormData(e.target);
     setLoading({ ...loading, [type]: true });
     await axiosPrivateInstance
-      .put(`/user/update/${type}/`, userData)
+      .put(`/user/update/${type}/`, formData)
       .then(async (response) => {
         if (response?.data?.details === "success") {
           if (type === "basic") {
             const { data } = await axiosPrivateInstance.get("/user/");
             setUserValue(data);
-          }else{
-            
+          } else {
+            setUserValue(null);
+            localStorage.removeItem("token");
+            localStorage.removeItem("csrf");
+            navigate("/login", { replace: true });
           }
-          
+
           toast.success("Update Successful", tostDefault);
         } else {
           setError(response.data);
@@ -171,13 +176,13 @@ const Profile = () => {
                   >
                     <div>
                       <div className="mb-1 block">
-                        <Label htmlFor="email" value="email" />
+                        <Label htmlFor="email" value="Email" />
                       </div>
                       <TextInput
                         id="email"
                         className="inputs"
                         type="email"
-                        placeholder="name@gmail.com"
+                        placeholder="name@abcd.com"
                         value={userData?.email || ""}
                         onChange={handleInputChange}
                         required
@@ -217,13 +222,12 @@ const Profile = () => {
                         id="current_password"
                         type="password"
                         placeholder="********"
-                        onChange={handleInputChange}
                         required
-                        name="password"
+                        name="current_password"
                         className="inputs"
                         helperText={
                           <span className="text-red-500">
-                            {error?.current_password}
+                            {error?.currentpassword}
                           </span>
                         }
                       />
@@ -238,13 +242,12 @@ const Profile = () => {
                         id="new_password"
                         type="password"
                         placeholder="********"
-                        onChange={handleInputChange}
                         required
                         name="new_password"
                         className="inputs"
                         helperText={
                           <span className="text-red-500">
-                            {error?.new_password}
+                            {error?.newpassword}
                           </span>
                         }
                       />
@@ -262,13 +265,12 @@ const Profile = () => {
                         id="confirm_password"
                         type="password"
                         placeholder="********"
-                        onChange={handleInputChange}
                         required
                         name="conf_password"
                         className="inputs"
                         helperText={
                           <span className="text-red-500">
-                            {error?.confirm_password}
+                            {error?.confpassword}
                           </span>
                         }
                       />
