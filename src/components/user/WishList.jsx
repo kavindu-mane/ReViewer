@@ -1,30 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { FaHeart } from "react-icons/fa";
-import axios from "axios";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useAuth } from "../../hooks/AuthContext";
+import useAxios from "../../hooks/useAxios";
+import toastDefault from "../../data/toastDefault";
+import { toast } from "react-toastify";
 
 function WishList({ bookDetails }) {
   const [inWishList, setInWishList] = useState(false);
+  const { user } = useAuth();
+  const axiosPrivateInstance = useAxios();
 
-  const addToWishList = async () => {
-    try {
-      if (inWishList) {
-        // If already in wishlist, remove it
-        await axios.post(`http://api/remove_from_wishlist/`, {
-          book_id: bookId,
-        });
-      } else {
-        // If not in wishlist, add it
-        await axios.post(`http://api/add_to_wishlist/`, {
-          book_id: bookId,
-        });
-      }
-
-      // Update the local state
+  const changeWishListStatus = async (path) => {
+    if (user) {
       setInWishList((prev) => !prev);
-    } catch (error) {
-      console.error("Error updating wishlist:", error);
+      await axiosPrivateInstance
+        .post(`/wishlist/${bookDetails?.isbn}/${path}/`)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success("Wishlist updated", toastDefault);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      axiosPrivateInstance
+        .get(`/wishlist/${bookDetails?.isbn}/`)
+        .then((response) => {
+          if (response.status === 200) {
+            setInWishList(response.data?.is_in_wishlist);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
 
   return (
     // Wishlist icon
@@ -34,10 +49,17 @@ function WishList({ bookDetails }) {
 
       {/* Wishlist icon */}
       <span className="cursor-pointer">
-        <FaHeart
-          onClick={addToWishList}
-          className={inWishList ? "text-red-500" : ""}
-        />
+        {inWishList ? (
+          <FaHeart
+            onClick={() => changeWishListStatus("remove")}
+            className="text-red-500"
+          />
+        ) : (
+          <FaRegHeart
+            onClick={() => changeWishListStatus("add")}
+            className="text-red-500"
+          />
+        )}
       </span>
     </div>
   );

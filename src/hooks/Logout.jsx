@@ -1,7 +1,7 @@
 import { useAuth } from "./AuthContext";
 import useAxios from "./useAxios";
 import { toast } from "react-toastify";
-import tostDefault from "../data/tostDefault";
+import toastDefault from "../data/toastDefault";
 import { useNavigate } from "react-router-dom";
 
 const Logout = ({ children, isNavigate = true }) => {
@@ -10,7 +10,7 @@ const Logout = ({ children, isNavigate = true }) => {
   const navigate = useNavigate();
 
   const logout = async () => {
-    const id = toast.loading("Please wait...", tostDefault);
+    const id = toast.loading("Please wait...", toastDefault);
     await axiosPrivateInstance
       .post("/logout/")
       .then((response) => {
@@ -19,7 +19,7 @@ const Logout = ({ children, isNavigate = true }) => {
           localStorage.removeItem("token");
           localStorage.removeItem("csrf");
           toast.update(id, {
-            ...tostDefault,
+            ...toastDefault,
             render: "Logout successful",
             type: "success",
             isLoading: false,
@@ -28,7 +28,7 @@ const Logout = ({ children, isNavigate = true }) => {
           if (isNavigate) navigate("/");
         } else {
           toast.update(id, {
-            ...tostDefault,
+            ...toastDefault,
             render: "Something went wrong",
             type: "error",
             isLoading: false,
@@ -38,7 +38,7 @@ const Logout = ({ children, isNavigate = true }) => {
       })
       .catch((error) => {
         toast.update(id, {
-          ...tostDefault,
+          ...toastDefault,
           render: "Something went wrong",
           type: "error",
           isLoading: false,

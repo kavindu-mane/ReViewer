@@ -1,120 +1,149 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import { FaArrowUp } from "react-icons/fa";
-import { Dropdown } from "flowbite-react";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import useAxios from "../../../../hooks/useAxios";
 
-const options = {
-  chart: {
-    height: "100%",
-    width: "100%",
-    type: "bar",
-    fontFamily: "Poppins, sans-serif",
-    dropShadow: {
-      enabled: false,
-    },
-    toolbar: {
-      show: true,
-    },
-  },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-      dataLabels: {
-        position: "top",
-      },
-    },
-  },
-  dataLabels: {
-    enabled: true,
-    offsetX: -6,
-    style: {
-      fontSize: "12px",
-      colors: ["#fff"],
-    },
-  },
-  stroke: {
-    show: false,
-  },
-  tooltip: {
-    shared: true,
-    intersect: false,
-  },
-  xaxis: {
-    categories: [
-      "01 February",
-      "02 February",
-      "03 February",
-      "04 February",
-      "05 February",
-      "06 February",
-      "07 February",
-    ],
-    labels: {
-      style: {
-        colors: "#777",
-      },
-    },
-    axisBorder: {
-      show: false,
-    },
-    axisTicks: {
-      show: false,
-    },
-  },
-  yaxis: {
-    labels: {
-      style: {
-        colors: "#777",
-      },
-    },
-  },
+const getDate = (date) => {
+  let today = new Date();
+  today.setDate(today.getDate() - date);
+  return (
+    today.toLocaleString("default", { month: "long" }) + " " + today.getDate()
+  );
 };
-
 const BooksChart = () => {
-  const [days, setDays] = useState(7);
-  const [headings, setHeadings] = useState({});
-  const getDate = (date) => {
-    let today = new Date();
-    today.setDate(today.getDate() - date);
-    return (
-      today.toLocaleString("default", { month: "long" }) + " " + today.getDate()
-    );
-  };
+  const [headings] = useState({
+    pastStart: getDate(13),
+    pastEnd: getDate(7),
+    currentStart: getDate(6),
+    currentEnd: getDate(0),
+  });
+
+  const [chartData, setChartData] = useState({
+    past: [0, 0, 0, 0, 0, 0],
+    current: [0, 0, 0, 0, 0, 0],
+  });
+  const [categories, setCategories] = useState([]);
+  const axiosPrivateInstance = useAxios();
 
   const series = [
     {
       name: `${headings?.pastStart ?? ""} to ${headings?.pastEnd ?? ""}`,
-      data: [1500, 1418, 1456, 1526, 1356, 1256, 1345],
+      data: chartData.past,
     },
     {
       name: `${headings?.currentStart ?? ""} to ${headings?.currentEnd ?? ""}`,
-      data: [643, 413, 765, 412, 1423, 1731, 1636],
+      data: chartData?.current,
     },
   ];
 
+  const options = {
+    chart: {
+      height: "100%",
+      width: "100%",
+      type: "bar",
+      fontFamily: "Poppins, sans-serif",
+      dropShadow: {
+        enabled: false,
+      },
+      toolbar: {
+        show: true,
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        dataLabels: {
+          position: "top",
+        },
+      },
+    },
+    dataLabels: {
+      enabled: true,
+      offsetX: -6,
+      style: {
+        fontSize: "12px",
+        colors: ["#fff"],
+      },
+    },
+    stroke: {
+      show: false,
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+    },
+    xaxis: {
+      categories: categories,
+      labels: {
+        style: {
+          colors: "#777",
+        },
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: "#777",
+        },
+      },
+    },
+  };
+
   useEffect(() => {
-    setHeadings({
-      pastStart: getDate(2 * days - 1),
-      pastEnd: getDate(days),
-      currentStart: getDate(days - 1),
-      currentEnd: getDate(0),
-    });
-  }, [days]);
+    axiosPrivateInstance
+      .get(`/admin/dashboard/books/`)
+      .then((response) => {
+        if (response?.status === 200) {
+          if (response?.data !== null) {
+            let valuesNew = [];
+            let valuesOld = [];
+            let categories = [];
+            response?.data?.new?.forEach((element) => {
+              valuesNew.push(element?.created_count);
+            });
+            response?.data?.old?.forEach((element) => {
+              valuesOld.push(element?.created_count);
+              categories.push(element?.day);
+            });
+
+            setChartData({ past: valuesOld, current: valuesNew });
+            setCategories(categories);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const calculatePercentage = () => {
+    return (
+      ((chartData?.current?.reduce((a, b) => a + b, 0) ?? 0) /
+        (chartData?.past?.reduce((a, b) => a + b, 0) ?? 0)) *
+      100
+    ).toFixed(2);
+  };
 
   return (
     <div className="w-full rounded-lg bg-white p-4 shadow-2xl ring-1 ring-gray-300 drop-shadow-xl dark:bg-gray-800 dark:ring-gray-700 md:p-6">
       <div className="mb-5 flex justify-between">
         <div>
           <h5 className="pb-2 text-3xl font-bold leading-none text-gray-900 dark:text-white">
-            12,423
+            {chartData?.current?.reduce((a, b) => a + b, 0) ?? 0}
           </h5>
           <p className="text-base font-normal text-gray-500 dark:text-gray-400">
-            Added Books : last {days} days
+            Added Books : last 7 days
           </p>
         </div>
         <div className="flex items-center px-2.5 py-0.5 text-center text-2xl font-semibold text-green-500 dark:text-green-500">
-          23%
-          <FaArrowUp />
+          {calculatePercentage()}%
+          {calculatePercentage() > 0 ? <FaArrowUp /> : <FaArrowDown />}
         </div>
       </div>
       {/* chart */}
@@ -125,16 +154,6 @@ const BooksChart = () => {
           type="bar"
           height={450}
         />
-      </div>
-      <div className="mt-5 grid grid-cols-1 items-center justify-between border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between pt-5">
-          {/* dropdown */}
-          <Dropdown label={"Last " + days + " Days"} inline>
-            <Dropdown.Item onClick={() => setDays(7)}>7 Days</Dropdown.Item>
-            <Dropdown.Item onClick={() => setDays(28)}>28 Days</Dropdown.Item>
-            <Dropdown.Item onClick={() => setDays(30)}>30 Days</Dropdown.Item>
-          </Dropdown>
-        </div>
       </div>
     </div>
   );

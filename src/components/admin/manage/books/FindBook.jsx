@@ -38,7 +38,7 @@ const FindBook = () => {
       })
       .catch((error) => {
         toast("Something went wrong", {
-          ...tostDefault,
+          ...toastDefault,
           type: "error",
           isLoading: false,
           closeButton: true,

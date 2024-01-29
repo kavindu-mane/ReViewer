@@ -7,7 +7,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./custom_styles/animations.css";
 import AuthMiddleware from "./middleware/Auth";
-import CursorEffect from "./components/CursorEffect";
 import LoadingAnimation from "./components/LoadingAnimation";
 import AddBook from "./components/admin/manage/books/AddBook";
 import SearchBook from "./components/admin/manage/books/FindBook";
@@ -44,8 +43,6 @@ function App() {
 
   return (
     <React.Fragment>
-      {/* cursor effect */}
-      <CursorEffect />
       <Router>
         <Suspense fallback={<LoadingAnimation />}>
           <ToastContainer limit={1} />
@@ -89,7 +86,7 @@ function App() {
                   path="books"
                   element={
                     <AdminDashboard>
-                      <AdminBooks >
+                      <AdminBooks>
                         <SearchBook />
                       </AdminBooks>
                     </AdminDashboard>
@@ -99,7 +96,7 @@ function App() {
                   path="books/add"
                   element={
                     <AdminDashboard>
-                      <AdminBooks >
+                      <AdminBooks>
                         <AddBook />
                       </AdminBooks>
                     </AdminDashboard>

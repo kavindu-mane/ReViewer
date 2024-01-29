@@ -9,15 +9,14 @@ const Footer = lazy(() => import("../../components/Footer"));
 const BookCard = lazy(() => import("../../components/user/BookCard"));
 const StarRating = lazy(() => import("../../components/user/StarRating"));
 const AddReview = lazy(() => import("../../components/user/AddReview"));
-const CustomerReview = lazy(
-  () => import("../../components/user/CustomerReview"),
-);
+const UserReview = lazy(() => import("../../components/user/UserReview"));
 const BookDetails = lazy(() => import("../../components/user/BookDetails"));
 const WishList = lazy(() => import("../../components/user/WishList"));
 
 const Books = () => {
   const { isbn } = useParams();
   const [book, setBook] = useState(null);
+  const [reviews, setReviews] = useState(null);
 
   // load book data
   useEffect(() => {
@@ -37,6 +36,24 @@ const Books = () => {
       });
   }, []);
 
+  // load reviews
+  useEffect(() => {
+    if (book !== null && book !== 404) {
+      axios
+        .get(`/review/${isbn}/1/ratings/`)
+        .then((response) => {
+          if (response?.status === 200) {
+            if (response?.data !== null) {
+              setReviews(response?.data);
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [book]);
+
   if (book === null) return <LoadingAnimation />;
   if (book === 404) return <Error />;
 
@@ -46,7 +63,6 @@ const Books = () => {
         <div className="relative flex min-h-screen flex-col items-center justify-between">
           {/* Header */}
           <NavBar />
-
           {/* Body */}
           <section className="mt-10 flex w-full flex-col items-center px-5 lg:px-8">
             <div className="mb-10 flex w-full max-w-7xl flex-col space-y-10">
@@ -78,12 +94,10 @@ const Books = () => {
                 <h3 className="font-Poppins text-xl font-medium md:text-2xl">
                   User Reviews
                 </h3>
-                {/* CustomerReview Component (implement as needed) */}
-                <CustomerReview />
-                <CustomerReview />
-                <CustomerReview />
+                {/* UserReview Component */}
+                <UserReview reviews={reviews?.reviews} />
                 <Link
-                  to={"review"}
+                  to={"reviews"}
                   className={"my-4 self-end text-blue-500 hover:underline"}
                 >
                   Read More

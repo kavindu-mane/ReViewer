@@ -5,7 +5,7 @@ import { CgClose } from "react-icons/cg";
 import { FaAngleRight } from "react-icons/fa6";
 import axios from "axios";
 import { toast } from "react-toastify";
-import tostDefault from "../../data/tostDefault";
+import toastDefault from "../../data/toastDefault";
 
 const Search = ({ openModal, setOpenModal }) => {
   const [books, setBooks] = useState(null);
@@ -15,7 +15,7 @@ const Search = ({ openModal, setOpenModal }) => {
     setBooks();
     if (keyword !== "") {
       await axios
-        .get("/search/" + keyword+"/")
+        .get("/search/" + keyword + "/")
         .then((response) => {
           if (response?.status === 200) {
             setBooks(response?.data?.users);
@@ -23,7 +23,7 @@ const Search = ({ openModal, setOpenModal }) => {
         })
         .catch((error) => {
           toast("Something went wrong", {
-            ...tostDefault,
+            ...toastDefault,
             type: "error",
             isLoading: false,
             closeButton: true,

@@ -10,6 +10,7 @@ import Lenis from "@studio-freight/lenis";
 const NavBar = lazy(() => import("../components/NavBar"));
 const Footer = lazy(() => import("../components/Footer"));
 const Parallax = lazy(() => import("../components/home/Parallax"));
+import CursorEffect from "../components/CursorEffect";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
@@ -56,6 +57,9 @@ const Home = () => {
 
   return (
     <React.Fragment>
+      {/* cursor effect */}
+      <CursorEffect />
+
       <div className="relative flex min-h-screen flex-col items-center justify-between">
         {/* header */}
         <NavBar />

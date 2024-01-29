@@ -6,7 +6,7 @@ import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { useAuth } from "../hooks/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import tostDefault from "../data/tostDefault";
+import toastDefault from "../data/toastDefault";
 import Logout from "../hooks/Logout";
 import useAxios from "../hooks/useAxios";
 const NavBarSecondary = lazy(() => import("../components/NavBarSecondary"));
@@ -41,7 +41,7 @@ const Login = () => {
         }
       })
       .catch((error) => {
-        toast.error("Something went wrong", tostDefault);
+        toast.error("Something went wrong", toastDefault);
       })
       .finally(() => setLoading(false));
   };
@@ -143,7 +143,7 @@ const Login = () => {
               {/* current user */}
               <Avatar
                 alt={user?.name[0]}
-                img="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                img={import.meta.env.VITE_BASE_URL?.slice(0, -4) + user?.avatar}
                 rounded
                 size={"lg"}
                 className="m-auto mb-2 mt-4"

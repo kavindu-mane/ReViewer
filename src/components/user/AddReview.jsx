@@ -1,20 +1,36 @@
 import { Button, Modal, Rating, Label, Textarea } from "flowbite-react";
 import { useState } from "react";
 import { BsPlus } from "react-icons/bs";
+import useAxios from "../../hooks/useAxios";
+import { toast } from "react-toastify";
 
-function AddReview({isbn}) {
+function AddReview({ isbn }) {
   const [openModal, setOpenModal] = useState(false);
-  const [ratings, setRatings] = useState(1);
+  const [rate, setRatings] = useState(1);
   const [review, setReview] = useState("");
+  const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
+  const axiosPrivateInstance = useAxios();
 
   // review submit handler
-  const handleSubmit = () => {
-    setOpenModal(false);
-    const formData = new FormData();
-    formData.append("ratings", ratings);
-    formData.append("review", review);
-    // axios
-    console.log(formData);
+  const handleSubmit = async () => {
+    setLoading(true);
+    await axiosPrivateInstance
+      .post(`/review/${isbn}/add/`, { rate, review })
+      .then(async (response) => {
+        if (response?.data?.details === "success") {
+          toast.success("Update Successful", toastDefault);
+        } else {
+          setError(response.data);
+        }
+      })
+      .catch((error) => {
+        toast.error("Something went wrong", toastDefault);
+      })
+      .finally(() => {
+        setLoading(false);
+        setOpenModal(false);
+      });
   };
 
   return (
@@ -43,26 +59,26 @@ function AddReview({isbn}) {
               onClick={() => setRatings(1)}
             />
             <Rating.Star
-              filled={ratings >= 2}
+              filled={rate >= 2}
               className="cursor-pointer"
               onClick={() => setRatings(2)}
             />
             <Rating.Star
-              filled={ratings >= 3}
+              filled={rate >= 3}
               className="cursor-pointer"
               onClick={() => setRatings(3)}
             />
             <Rating.Star
-              filled={ratings >= 4}
+              filled={rate >= 4}
               className="cursor-pointer"
               onClick={() => setRatings(4)}
             />
             <Rating.Star
-              filled={ratings === 5}
+              filled={rate === 5}
               className="cursor-pointer"
               onClick={() => setRatings(5)}
             />
-            <p className="ms-3 text-sm">{ratings} Star ratring</p>
+            <p className="ms-3 text-sm">{rate} Star ratring</p>
           </Rating>
           {/* review area */}
           <div className="mt-4">

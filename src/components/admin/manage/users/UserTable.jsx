@@ -9,7 +9,7 @@ import {
 import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import useAxios from "../../../../hooks/useAxios";
-import tostDefault from "../../../../data/tostDefault";
+import toastDefault from "../../../../data/toastDefault";
 import Swal from "sweetalert2";
 import { IoMdSearch } from "react-icons/io";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -47,7 +47,7 @@ const UserTable = () => {
       })
       .catch((error) => {
         toast("Something went wrong", {
-          ...tostDefault,
+          ...toastDefault,
           type: "error",
           isLoading: false,
           closeButton: true,
@@ -68,13 +68,13 @@ const UserTable = () => {
       reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const id = toast.loading("Please wait...", tostDefault);
+        const id = toast.loading("Please wait...", toastDefault);
         await axiosPrivateInstance
           .post("/admin/users/update/", { status: status, email: email })
           .then((response) => {
             if (response?.status === 200) {
               toast.update(id, {
-                ...tostDefault,
+                ...toastDefault,
                 render: "Update successful",
                 type: "success",
                 isLoading: false,
@@ -86,7 +86,7 @@ const UserTable = () => {
           })
           .catch((error) => {
             toast.update(id, {
-              ...tostDefault,
+              ...toastDefault,
               render: "Something went wrong",
               type: "error",
               isLoading: false,
@@ -96,7 +96,7 @@ const UserTable = () => {
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         toast("Account status change canceled", {
-          ...tostDefault,
+          ...toastDefault,
           type: "info",
           isLoading: false,
           closeButton: true,

@@ -10,7 +10,7 @@ import {
 import background from "../assets/wave-line.svg";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { useAuth } from "../hooks/AuthContext";
-import tostDefault from "../data/tostDefault";
+import toastDefault from "../data/toastDefault";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Logout from "../hooks/Logout";
@@ -37,7 +37,7 @@ const Register = () => {
         setLoading(false);
         if (response.status === 200) {
           if (response.data?.details === "success") {
-            toast.success("Registration successful", tostDefault);
+            toast.success("Registration successful", toastDefault);
             navigate("/login", { replace: true });
           } else {
             setError(response.data);
@@ -45,7 +45,7 @@ const Register = () => {
         }
       })
       .catch((error) => {
-        toast.success("Something went wrong", tostDefault);
+        toast.success("Something went wrong", toastDefault);
       })
       .finally(() => setLoading(false));
   };

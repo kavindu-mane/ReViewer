@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 import { BsCloudUpload } from "react-icons/bs";
 import bookCategory from "../../../../data/Admin/bookCategory";
-import tostDefault from "../../../../data/tostDefault";
+import toastDefault from "../../../../data/toastDefault";
 import useAxios from "../../../../hooks/useAxios";
 
 const AddBook = () => {
@@ -23,7 +23,7 @@ const AddBook = () => {
     maxSize: 2097152,
     multiple: false,
     onDropRejected: () =>
-      toast.error("You can't upload this file", tostDefault),
+      toast.error("You can't upload this file", toastDefault),
     onDropAccepted: (acceptedFiles) =>
       setFiles(
         acceptedFiles.map((file) =>
@@ -42,7 +42,7 @@ const AddBook = () => {
     const formData = new FormData(e.target);
     if (acceptedFiles.length > 0)
       formData.append("cover_image", acceptedFiles[0]);
-    const id = toast.loading("Please wait...", tostDefault);
+    const id = toast.loading("Please wait...", toastDefault);
 
     await axiosPrivateInstance
       .post("/admin/books/add/", formData, {
@@ -55,12 +55,13 @@ const AddBook = () => {
         if (response.status === 200) {
           if (response.data?.details === "success") {
             toast.update(id, {
-              ...tostDefault,
+              ...toastDefault,
               render: "Successfully Added",
               type: "success",
               isLoading: false,
               closeButton: true,
             });
+            e.target.reset();
           } else {
             toast.dismiss(id);
             setError(response.data);
@@ -70,7 +71,7 @@ const AddBook = () => {
       .catch((error) => {
         setLoading(false);
         toast.update(id, {
-          ...tostDefault,
+          ...toastDefault,
           render: "Something went wrong",
           type: "error",
           isLoading: false,

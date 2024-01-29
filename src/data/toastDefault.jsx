@@ -1,6 +1,6 @@
 import { Bounce } from "react-toastify";
 
-const tostDefault = {
+const toastDefault = {
   transition: Bounce,
   position: "top-right",
   autoClose: 3000,
@@ -11,4 +11,4 @@ const tostDefault = {
   theme: "colored",
 };
 
-export default tostDefault;
+export default toastDefault;

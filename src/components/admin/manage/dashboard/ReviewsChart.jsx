@@ -1,131 +1,161 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import { FaArrowUp } from "react-icons/fa";
-import { Dropdown } from "flowbite-react";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import useAxios from "../../../../hooks/useAxios";
 
-const options = {
-  chart: {
-    height: "100%",
-    width: "100%",
-    type: "area",
-    fontFamily: "Poppins, sans-serif",
-    dropShadow: {
-      enabled: false,
-    },
-    toolbar: {
-      show: false,
-    },
-  },
-  tooltip: {
-    enabled: true,
-    x: {
-      show: false,
-    },
-  },
-  legend: {
-    show: true,
-  },
-  fill: {
-    type: "gradient",
-    gradient: {
-      opacityFrom: 0.55,
-      opacityTo: 0,
-      shade: "#1C64F2",
-      gradientToColors: ["#1C64F2"],
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  stroke: {
-    width: 6,
-  },
-  grid: {
-    show: false,
-    strokeDashArray: 4,
-    padding: {
-      left: 2,
-      right: 2,
-      top: -26,
-    },
-  },
-  xaxis: {
-    categories: [
-      "01 February",
-      "02 February",
-      "03 February",
-      "04 February",
-      "05 February",
-      "06 February",
-      "07 February",
-    ],
-    labels: {
-      show: false,
-    },
-    axisBorder: {
-      show: false,
-    },
-    axisTicks: {
-      show: false,
-    },
-  },
-  yaxis: {
-    show: false,
-    labels: {
-      formatter: function (value) {
-        return value;
-      },
-    },
-  },
+const getDate = (date) => {
+  let today = new Date();
+  today.setDate(today.getDate() - date);
+  return (
+    today.toLocaleString("default", { month: "long" }) + " " + today.getDate()
+  );
 };
 
 const ReviewsChart = () => {
-  const [days, setDays] = useState(7);
-  const [headings, setHeadings] = useState({});
-  const getDate = (date) => {
-    let today = new Date();
-    today.setDate(today.getDate() - date);
-    return (
-      today.toLocaleString("default", { month: "long" }) + " " + today.getDate()
-    );
-  };
+  const [headings] = useState({
+    pastStart: getDate(13),
+    pastEnd: getDate(7),
+    currentStart: getDate(6),
+    currentEnd: getDate(0),
+  });
+
+  const [chartData, setChartData] = useState({
+    past: [0, 0, 0, 0, 0, 0],
+    current: [0, 0, 0, 0, 0, 0],
+  });
+  const [categories, setCategories] = useState([]);
+  const axiosPrivateInstance = useAxios();
 
   const series = [
     {
       name: `${headings?.pastStart ?? ""} to ${headings?.pastEnd ?? ""}`,
-      data: [1500, 1418, 1456, 1526, 1356, 1256],
+      data: chartData.past,
       color: "#1A56DB",
     },
     {
       name: `${headings?.currentStart ?? ""} to ${headings?.currentEnd ?? ""}`,
-      data: [643, 413, 765, 412, 1423, 1731],
+      data: chartData.current,
       color: "#7E3BF2",
     },
   ];
 
+  const options = {
+    chart: {
+      height: "100%",
+      width: "100%",
+      type: "area",
+      fontFamily: "Poppins, sans-serif",
+      dropShadow: {
+        enabled: false,
+      },
+      toolbar: {
+        show: false,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false,
+      },
+    },
+    legend: {
+      show: true,
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        opacityFrom: 0.55,
+        opacityTo: 0,
+        shade: "#1C64F2",
+        gradientToColors: ["#1C64F2"],
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      width: 6,
+    },
+    grid: {
+      show: false,
+      strokeDashArray: 4,
+      padding: {
+        left: 2,
+        right: 2,
+        top: -26,
+      },
+    },
+    xaxis: {
+      categories: categories,
+      labels: {
+        show: false,
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: {
+      show: false,
+      labels: {
+        formatter: function (value) {
+          return value;
+        },
+      },
+    },
+  };
+
   useEffect(() => {
-    setHeadings({
-      pastStart: getDate(2 * days - 1),
-      pastEnd: getDate(days),
-      currentStart: getDate(days - 1),
-      currentEnd: getDate(0),
-    });
-  }, [days]);
+    axiosPrivateInstance
+      .get(`/admin/dashboard/reviews/`)
+      .then((response) => {
+        if (response?.status === 200) {
+          if (response?.data !== null) {
+            let valuesNew = [];
+            let valuesOld = [];
+            let categories = [];
+            response?.data?.new?.forEach((element) => {
+              valuesNew.push(element?.created_count);
+            });
+            response?.data?.old?.forEach((element) => {
+              valuesOld.push(element?.created_count);
+              categories.push(element?.day);
+            });
+
+            setChartData({ past: valuesOld, current: valuesNew });
+            setCategories(categories);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const calculatePercentage = () => {
+    return (
+      ((chartData?.current?.reduce((a, b) => a + b, 0) ?? 0) /
+        (chartData?.past?.reduce((a, b) => a + b, 0) ?? 0)) *
+      100
+    ).toFixed(2);
+  };
 
   return (
     <div className="w-full rounded-lg bg-white p-4 shadow-2xl ring-1 ring-gray-300 drop-shadow-xl dark:bg-gray-800 dark:ring-gray-700 md:p-6">
       <div className="mb-5 flex justify-between">
         <div>
           <h5 className="pb-2 text-3xl font-bold leading-none text-gray-900 dark:text-white">
-            12,423
+            {chartData?.current?.reduce((a, b) => a + b, 0) ?? 0}
           </h5>
           <p className="text-base font-normal text-gray-500 dark:text-gray-400">
-            Reviews : last {days} days
+            Reviews : last 7 days
           </p>
         </div>
         <div className="flex items-center px-2.5 py-0.5 text-center text-2xl font-semibold text-green-500 dark:text-green-500">
-          23%
-          <FaArrowUp />
+          {calculatePercentage()}%
+          {calculatePercentage() > 0 ? <FaArrowUp /> : <FaArrowDown />}
         </div>
       </div>
       {/* chart */}
@@ -136,16 +166,6 @@ const ReviewsChart = () => {
           type="area"
           height={200}
         />
-      </div>
-      <div className="mt-5 grid grid-cols-1 items-center justify-between border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between pt-5">
-          {/* dropdown */}
-          <Dropdown label={"Last " + days + " Days"} inline>
-            <Dropdown.Item onClick={() => setDays(7)}>7 Days</Dropdown.Item>
-            <Dropdown.Item onClick={() => setDays(28)}>28 Days</Dropdown.Item>
-            <Dropdown.Item onClick={() => setDays(30)}>30 Days</Dropdown.Item>
-          </Dropdown>
-        </div>
       </div>
     </div>
   );

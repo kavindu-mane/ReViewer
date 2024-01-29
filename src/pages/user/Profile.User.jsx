@@ -1,9 +1,18 @@
-import { TextInput, Label, Button, Rating, Datepicker } from "flowbite-react";
+import {
+  TextInput,
+  Label,
+  Button,
+  Rating,
+  Datepicker,
+  Pagination,
+  FileInput,
+  Avatar,
+} from "flowbite-react";
 import React, { lazy, useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
 import { useAuth } from "../../hooks/AuthContext";
 import { toast } from "react-toastify";
-import tostDefault from "../../data/tostDefault";
+import toastDefault from "../../data/toastDefault";
 import { useNavigate } from "react-router-dom";
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
@@ -17,6 +26,8 @@ const Profile = () => {
     avatar: "/media/users/default_user.svg",
   });
   const [error, setError] = useState({});
+  const [review, setReview] = useState({});
+  const [wishlist, setWishlist] = useState({});
   const [loading, setLoading] = useState({
     basic: false,
     email: false,
@@ -24,6 +35,10 @@ const Profile = () => {
   });
   const axiosPrivateInstance = useAxios();
   const navigate = useNavigate();
+  const [wishlistCurrentPage, setWishlistCurrentPage] = useState(1);
+  const onWishlistPageChange = (page) => setWishlistCurrentPage(page);
+  const [reviewCurrentPage, setReviewCurrentPage] = useState(1);
+  const onReviewPageChange = (page) => setReviewCurrentPage(page);
 
   const handleInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -35,10 +50,14 @@ const Profile = () => {
     const formData = new FormData(e.target);
     setLoading({ ...loading, [type]: true });
     await axiosPrivateInstance
-      .put(`/user/update/${type}/`, formData)
+      .put(`/user/update/${type}/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then(async (response) => {
         if (response?.data?.details === "success") {
-          if (type === "basic") {
+          if (type === "basic" || type === "picture") {
             const { data } = await axiosPrivateInstance.get("/user/");
             setUserValue(data);
           } else {
@@ -48,13 +67,13 @@ const Profile = () => {
             navigate("/login", { replace: true });
           }
 
-          toast.success("Update Successful", tostDefault);
+          toast.success("Update Successful", toastDefault);
         } else {
           setError(response.data);
         }
       })
       .catch((error) => {
-        toast.error("Something went wrong", tostDefault);
+        toast.error("Something went wrong", toastDefault);
       })
       .finally(() => {
         setLoading({ ...loading, [type]: false });
@@ -64,6 +83,39 @@ const Profile = () => {
   useEffect(() => {
     setUserData(user);
   }, []);
+
+  // fetch data in loading
+  useEffect(() => {
+    // wishlist
+    axiosPrivateInstance
+      .get(`/user/wishlist/`)
+      .then((response) => {
+        if (response?.status === 200) {
+          if (response?.data !== null) {
+            setWishlist(response?.data);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [wishlistCurrentPage]);
+
+  useEffect(() => {
+    // reviews
+    axiosPrivateInstance
+      .get(`/user/reviews/`)
+      .then((response) => {
+        if (response?.status === 200) {
+          if (response?.data !== null) {
+            setReview(response?.data);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [reviewCurrentPage]);
 
   return (
     <React.Fragment>
@@ -83,7 +135,7 @@ const Profile = () => {
                       import.meta.env.VITE_BASE_URL?.slice(0, -4) +
                       userData?.avatar
                     }
-                    className="w-40 rounded-full border-4 border-white"
+                    className="h-40 w-40 rounded-full border-4 border-white object-contain"
                   />
                   <div className="mt-5 flex items-center space-x-2">
                     <p className="font-Poppins text-2xl font-medium italic">
@@ -286,13 +338,35 @@ const Profile = () => {
                       </Button>
                     </div>
                   </form>
+
+                  {/* profile photo */}
+                  <form
+                    className="mt-5 flex flex-col items-end space-y-5"
+                    onSubmit={(e) => {
+                      handleUpdate(e, "picture");
+                    }}
+                  >
+                    <div className="w-full">
+                      <div className="mb-1 block">
+                        <Label htmlFor="name" value="Name" />
+                      </div>
+                      <FileInput name="avatar" className="inputs w-full" />
+                    </div>
+                    <Button
+                      size={"sm"}
+                      className="w-44 rounded-[5px]"
+                      type="submit"
+                    >
+                      Change Picture
+                    </Button>
+                  </form>
                 </div>
                 {/* form area end */}
               </div>
             </div>
 
             {/* right side */}
-            <div className="w-full">
+            <div className="mt-10 w-full">
               {/* want to read */}
               <div className="">
                 {/* Want to read topic */}
@@ -300,38 +374,47 @@ const Profile = () => {
                   Want to Read
                 </h1>
                 {/*card start*/}
-                {Array.from({ length: 3 }).map((_, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="mb-5 flex space-x-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
-                    >
-                      {/* left side */}
-                      <img
-                        src="https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1131&q=80"
-                        alt="book"
-                        className="h-20 w-20 rounded-md object-cover"
-                      />
-                      {/* right side */}
-                      <div className="">
-                        <h5 className="font-Poppins text-xl font-medium tracking-tight text-gray-900 dark:text-white">
-                          Noteworthy Technology
-                        </h5>
-                        <p className="flex text-sm text-gray-700 dark:text-gray-400">
-                          Here are the biggest enterprise technology .
-                        </p>
+                {wishlist?.wishlist?.length > 0 ? (
+                  wishlist?.wishlist?.map((data, index) => {
+                    return (
+                      <div key={index}>
+                        <div className="mb-5 flex space-x-5 border-b border-gray-400/70 pb-5 dark:border-gray-600">
+                          {/* left side */}
+                          <img
+                            src={
+                              import.meta.env.VITE_BASE_URL?.slice(0, -4) +
+                              data?.book?.cover_image
+                            }
+                            alt="book"
+                            className="h-20 w-20 rounded-md object-cover"
+                          />
+                          {/* right side */}
+                          <div className="">
+                            <h5 className="font-Poppins text-xl font-medium tracking-tight text-gray-900 dark:text-white">
+                              {data?.book?.title}
+                            </h5>
+                            <p className="flex text-sm text-gray-700 dark:text-gray-400">
+                              {data?.book?.author}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex justify-end">
+                          <Pagination
+                            layout="navigation"
+                            currentPage={wishlistCurrentPage}
+                            totalPages={wishlist?.meta?.page_count || 1}
+                            onPageChange={onWishlistPageChange}
+                            showIcons
+                          />
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-                <div className="flex justify-end">
-                  <Button
-                    href="/"
-                    className="bg-transparent text-sky-500 duration-200 hover:text-sky-700 dark:bg-transparent"
-                  >
-                    View More
-                  </Button>
-                </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-sm italic">
+                    Wishlist is empty
+                  </p>
+                )}
                 {/*card end*/}
               </div>
 
@@ -342,40 +425,43 @@ const Profile = () => {
                   My Review
                 </h1>
                 {/* review -start*/}
-                {Array.from({ length: 3 }).map((_, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600"
-                    >
-                      <p className="mb-1 text-lg">Noteworthy Technology</p>
-                      <Rating size="sm" className="mb-5">
-                        <Rating.Star />
-                        <Rating.Star />
-                        <Rating.Star />
-                        <Rating.Star />
-                        <Rating.Star />
-                      </Rating>
+                {review?.reviews?.length > 0 ? (
+                  review?.reviews?.map((data, index) => {
+                    return (
+                      <div key={index}>
+                        <div className="mb-5 border-b border-gray-400/70 pb-5 dark:border-gray-600">
+                          <p className="mb-1 text-lg">{data?.book?.title}</p>
+                          <Rating size={"sm"} className="mb-5">
+                            {Array(data?.rate ?? 1)
+                              .fill(1)
+                              .map((el, i) => (
+                                <Rating.Star key={i} />
+                              ))}
+                          </Rating>
 
-                      <p className="text-sm italic text-gray-600 dark:text-gray-300">
-                        "Flowbite is just awesome. It contains tons of
-                        predesigned components and pages starting from login
-                        screen to complex dashboard. Perfect choice for your
-                        next SaaS application."
-                      </p>
-                    </div>
-                  );
-                })}
+                          <p className="text-sm italic text-gray-600 dark:text-gray-300">
+                            {data?.review}
+                          </p>
+                        </div>
+                        {/* review pagination */}
+                        <div className="flex justify-end">
+                          <Pagination
+                            layout="navigation"
+                            currentPage={reviewCurrentPage}
+                            totalPages={review?.meta?.page_count || 1}
+                            onPageChange={onReviewPageChange}
+                            showIcons
+                          />
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-sm italic">
+                    No reviews added yet
+                  </p>
+                )}
                 {/* review -end*/}
-                {/* review pagination */}
-                <div className="flex justify-end">
-                  <Button
-                    href="/"
-                    className="bg-transparent text-sky-500 duration-200 hover:text-sky-700 dark:bg-transparent"
-                  >
-                    View More
-                  </Button>
-                </div>
               </div>
             </div>
           </div>
