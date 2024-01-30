@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import useAxios from "../../hooks/useAxios";
 import { toast } from "react-toastify";
+import toastDefault from "../../data/toastDefault";
 
 function AddReview({ isbn }) {
   const [openModal, setOpenModal] = useState(false);
@@ -17,7 +18,7 @@ function AddReview({ isbn }) {
     setLoading(true);
     await axiosPrivateInstance
       .post(`/review/${isbn}/add/`, { rate, review })
-      .then(async (response) => {
+      .then((response) => {
         if (response?.data?.details === "success") {
           toast.success("Update Successful", toastDefault);
         } else {

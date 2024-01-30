@@ -5,11 +5,13 @@ import HalfBookCard from "../../components/user/HalfBookCard";
 import { Pagination, Dropdown } from "flowbite-react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../hooks/AuthContext";
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
 
 const Review = () => {
   const [search] = useSearchParams();
+  const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState(search.get("page") || 1);
   const [paginationData, setPaginationData] = useState({});
   const [book, setBook] = useState(null);
@@ -75,7 +77,7 @@ const Review = () => {
           <div className="mb-10 flex w-full max-w-7xl flex-col space-y-10">
             <HalfBookCard bookDetails={book} />
             <div className="flex w-full justify-between">
-              <AddReview isbn={isbn} />
+              {user ? <AddReview isbn={isbn} /> : <span></span>}
               <Dropdown label="Sort by" inline>
                 <Dropdown.Item onClick={() => changeSortBy("ratings")}>
                   Ratings

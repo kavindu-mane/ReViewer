@@ -3,6 +3,7 @@ import React, { lazy, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import LoadingAnimation from "../../components/LoadingAnimation";
+import { useAuth } from "../../hooks/AuthContext";
 const Error = lazy(() => import("../Error"));
 const NavBar = lazy(() => import("../../components/NavBar"));
 const Footer = lazy(() => import("../../components/Footer"));
@@ -15,6 +16,7 @@ const WishList = lazy(() => import("../../components/user/WishList"));
 
 const Books = () => {
   const { isbn } = useParams();
+  const { user } = useAuth();
   const [book, setBook] = useState(null);
   const [reviews, setReviews] = useState(null);
 
@@ -73,7 +75,7 @@ const Books = () => {
                   {/* BookCard Component */}
                   <BookCard bookDetails={book} />
                   {/* WishList Component */}
-                  <WishList bookDetails={book} />
+                  {user && <WishList bookDetails={book} />}
                 </div>
 
                 {/* Right row */}
@@ -83,7 +85,7 @@ const Books = () => {
                   {/* StarRating Component */}
                   <StarRating bookDetails={book} />
                   {/* AddReview Component */}
-                  <AddReview isbn={isbn} />
+                  {user && <AddReview isbn={isbn} />}
 
                   <hr className="my-8 h-px border-0 bg-gray-400 dark:bg-gray-700" />
                 </div>
@@ -96,12 +98,14 @@ const Books = () => {
                 </h3>
                 {/* UserReview Component */}
                 <UserReview reviews={reviews?.reviews} />
-                <Link
-                  to={"reviews"}
-                  className={"my-4 self-end text-blue-500 hover:underline"}
-                >
-                  Read More
-                </Link>
+                {reviews?.reviews?.length !== 0 && (
+                  <Link
+                    to={"reviews"}
+                    className={"my-4 self-end text-blue-500 hover:underline"}
+                  >
+                    Read More
+                  </Link>
+                )}
               </div>
             </div>
           </section>

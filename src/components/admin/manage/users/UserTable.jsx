@@ -181,7 +181,7 @@ const UserTable = () => {
                         </Table.Cell>
                         <Table.Cell> {user?.email}</Table.Cell>
                         <Table.Cell> {user?.birth_date}</Table.Cell>
-                        <Table.Cell>$2999</Table.Cell>
+                        <Table.Cell>{user?.review_user}</Table.Cell>
                         <Table.Cell>
                           <Button
                             size={"xs"}

@@ -3,7 +3,7 @@ import { Avatar, Rating } from "flowbite-react";
 function UserReview({ reviews }) {
   return (
     <div>
-      {reviews &&
+      {reviews?.length !== 0 ? (
         reviews?.map((review, key) => (
           <div key={key}>
             <div className="mb-4 flex items-center">
@@ -38,9 +38,12 @@ function UserReview({ reviews }) {
             <p className="mt-4 text-gray-500 dark:text-gray-300">
               {review.review}
             </p>
-            <hr className="mt-8 mb-5 h-px border-0 bg-gray-400 dark:bg-gray-700"></hr>
+            <hr className="mb-5 mt-8 h-px border-0 bg-gray-400 dark:bg-gray-700"></hr>
           </div>
-        ))}
+        ))
+      ) : (
+        <p className="text-center text-sm italic">No reviews yet</p>
+      )}
     </div>
   );
 }
